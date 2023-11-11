@@ -9,17 +9,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Rasterization {
+public class Triangulation {
     private final Model working_model;
 
     private final double eps = 0e-4;
     private Model ans_model;
 
-    public Rasterization(Model working_model) {
+    public Triangulation(Model working_model) {
         this.working_model = working_model;
     }
 
-    public Model rasterizate() {
+    public Model triangulate() {
         ans_model = new Model();
         ans_model.vertices = new ArrayList<>(working_model.vertices);
         ans_model.normals = new ArrayList<>(working_model.normals);

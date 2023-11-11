@@ -1,7 +1,7 @@
 package com.cgvsu;
 
 import com.cgvsu.painter_engine.Normalization;
-import com.cgvsu.painter_engine.Rasterization;
+import com.cgvsu.painter_engine.Triangulation;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
@@ -9,7 +9,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -41,7 +40,7 @@ public class GuiController {
 
     private Model default_model = null;
     private Model normal_model = null;
-    private Model rastirezed_model = null;
+    private Model trianguled_model = null;
 
     private Camera camera = new Camera(
             new Vector3f(0, 00, 100),
@@ -68,7 +67,7 @@ public class GuiController {
 
             if (default_model != null) {
                 if (is_triangle.isSelected()) {
-                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, rastirezed_model, (int) width, (int) height);
+                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height);
                 } else {
                     RenderEngine.render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
                 }
@@ -96,7 +95,7 @@ public class GuiController {
             String fileContent = Files.readString(fileName);
             default_model = ObjReader.read(fileContent);
             normal_model = new Normalization(default_model).recalceNormales();
-            rastirezed_model = new Rasterization(normal_model).rasterizate();
+            trianguled_model = new Triangulation(normal_model).triangulate();
             // todo: обработка ошибок
         } catch (IOException exception) {
 

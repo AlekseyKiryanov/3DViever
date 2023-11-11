@@ -15,7 +15,7 @@
             </MenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Setting">
-            <CheckMenuItem fx:id="is_triangle" mnemonicParsing="false" text="Rasterize">
+            <CheckMenuItem fx:id="is_triangle" mnemonicParsing="false" text="Triangulate">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>

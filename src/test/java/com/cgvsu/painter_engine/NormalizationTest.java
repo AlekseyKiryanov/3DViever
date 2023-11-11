@@ -60,4 +60,30 @@ class NormalizationTest {
         ObjWriter.write("D:\\cilinderRN.obj", new_model);
 
     }
+
+    @Test
+    void tram() throws IOException {
+        Path fileName = Path.of("D:\\tatraT6B5_1.obj");
+        String fileContent = Files.readString(fileName);
+        Model model = ObjReader.read(fileContent);
+
+        Model new_model = new Normalization(model).recalceNormales();
+
+        ObjWriter.write("D:\\tatraT6B5_1N.obj", new_model);
+
+    }
+
+    @Test
+    void torus() throws IOException {
+        Path fileName = Path.of("D:\\torus.obj");
+        String fileContent = Files.readString(fileName);
+        Model model = ObjReader.read(fileContent);
+
+        Model new_model = new Normalization(model).recalceNormales();
+
+        ObjWriter.write("D:\\tprusN.obj", new_model);
+
+    }
+
+
 }

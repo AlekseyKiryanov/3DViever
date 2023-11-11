@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class RasterizationTest {
+class TriangulationTest {
 
 
     @Test
@@ -20,7 +18,7 @@ class RasterizationTest {
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 
-        Model new_model = new Rasterization(model).rasterizate();
+        Model new_model = new Triangulation(model).triangulate();
 
         ObjWriter.write("D:\\cubeR.obj", new_model);
 
@@ -32,7 +30,7 @@ class RasterizationTest {
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 
-        Model new_model = new Rasterization(model).rasterizate();
+        Model new_model = new Triangulation(model).triangulate();
 
         ObjWriter.write("D:\\cilinderR.obj", new_model);
 
@@ -44,7 +42,7 @@ class RasterizationTest {
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 
-        Model new_model = new Rasterization(model).rasterizate();
+        Model new_model = new Triangulation(model).triangulate();
 
         ObjWriter.write("D:\\coneR.obj", new_model);
 
