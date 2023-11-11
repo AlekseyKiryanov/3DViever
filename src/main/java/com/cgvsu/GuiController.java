@@ -1,5 +1,7 @@
 package com.cgvsu;
 
+import com.cgvsu.painter_engine.Normalization;
+import com.cgvsu.painter_engine.Rasterization;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
@@ -7,10 +9,13 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -26,12 +31,17 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
 
     @FXML
+    public CheckMenuItem is_triangle;
+
+    @FXML
     AnchorPane anchorPane;
 
     @FXML
     private Canvas canvas;
 
-    private Model mesh = null;
+    private Model default_model = null;
+    private Model normal_model = null;
+    private Model rastirezed_model = null;
 
     private Camera camera = new Camera(
             new Vector3f(0, 00, 100),
@@ -48,15 +58,20 @@ public class GuiController {
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
-        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
+        KeyFrame frame = new KeyFrame(Duration.millis(34), event -> {
+            //Работа в 30 ФПС
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            if (mesh != null) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+            if (default_model != null) {
+                if (is_triangle.isSelected()) {
+                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, rastirezed_model, (int) width, (int) height);
+                } else {
+                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
+                }
             }
         });
 
@@ -79,7 +94,9 @@ public class GuiController {
 
         try {
             String fileContent = Files.readString(fileName);
-            mesh = ObjReader.read(fileContent);
+            default_model = ObjReader.read(fileContent);
+            normal_model = new Normalization(default_model).recalceNormales();
+            rastirezed_model = new Rasterization(normal_model).rasterizate();
             // todo: обработка ошибок
         } catch (IOException exception) {
 
