@@ -3,23 +3,33 @@ package com.cgvsu.vectormath.matrix;
 
 import com.cgvsu.vectormath.vector.Vector4D;
 
-public class Matrix4x4{
-    private double[][] matrix = new double[4][4];
+import java.util.Arrays;
 
-    public Matrix4x4(double[][] data) {
+public class Matrix4x4{
+    private float[][] matrix = new float[4][4];
+
+    public Matrix4x4(float[][] data) {
         if (data.length != 4 || data[0].length != 4) {
             throw new IllegalArgumentException("Матрица должна быть 4x4");
         }
         this.matrix = data;
     }
 
-    public double[][] getMatrix() {
+    public float[][] getMatrix() {
         return matrix;
+    }
+
+    public void setElem(int indX, int indY, float value){
+        matrix[indX][indY] = value;
+    }
+
+    public float getElem(int indX, int indY){
+        return matrix[indX][indY];
     }
 
     // Сложение матриц
     public Matrix4x4 add(Matrix4x4 other) {
-        double[][] result = new double[4][4];
+        float[][] result = new float[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 result[i][j] = this.matrix[i][j] + other.matrix[i][j];
@@ -30,7 +40,7 @@ public class Matrix4x4{
 
     // Вычитание матриц
     public Matrix4x4 subtract(Matrix4x4 other) {
-        double[][] result = new double[4][4];
+        float[][] result = new float[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 result[i][j] = this.matrix[i][j] - other.matrix[i][j];
@@ -44,7 +54,7 @@ public class Matrix4x4{
         if (vector == null) {
             throw new NullPointerException("Вектор не может быть нулевым");
         }
-        double[] result = new double[4];
+        float[] result = new float[4];
         for (int i = 0; i < 4; i++) {
             result[i] = 0;
             for (int j = 0; j < 4; j++) {
@@ -56,7 +66,7 @@ public class Matrix4x4{
 
     // Умножение на матрицу
     public Matrix4x4 multiply(Matrix4x4 other) {
-        double[][] result = new double[4][4];
+        float[][] result = new float[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 result[i][j] = 0;
@@ -70,7 +80,7 @@ public class Matrix4x4{
 
     // Транспонирование
     public Matrix4x4 transpose() {
-        double[][] result = new double[4][4];
+        float[][] result = new float[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 result[i][j] = this.matrix[j][i];
@@ -81,7 +91,7 @@ public class Matrix4x4{
 
     // Задание единичной матрицы
     public static Matrix4x4 identity() {
-        double[][] identityMatrix = new double[][]{
+        float[][] identityMatrix = new float[][]{
                 {1, 0, 0, 0},
                 {0, 1, 0, 0},
                 {0, 0, 1, 0},
@@ -92,7 +102,7 @@ public class Matrix4x4{
 
     // Задание нулевой матрицы
     public static Matrix4x4 zero() {
-        double[][] zeroMatrix = new double[][]{
+        float[][] zeroMatrix = new float[][]{
                 {0, 0, 0, 0},
                 {0, 0, 0, 0},
                 {0, 0, 0, 0},
@@ -100,11 +110,11 @@ public class Matrix4x4{
         };
         return new Matrix4x4(zeroMatrix);
     }
-    public double determinate(){
-        double[][] data1 = new double[3][3];
-        double[][] data2 = new double[3][3];
-        double[][] data3 = new double[3][3];
-        double[][] data4 = new double[3][3];
+    public float determinate(){
+        float[][] data1 = new float[3][3];
+        float[][] data2 = new float[3][3];
+        float[][] data3 = new float[3][3];
+        float[][] data4 = new float[3][3];
 
         for(int i = 1; i < 4; i++){
             for(int j = 0; j < 4; j++){
@@ -137,5 +147,34 @@ public class Matrix4x4{
         Matrix3x3 m4 = new Matrix3x3(data4);
 
         return (matrix[0][0]*m1.determinate()-matrix[0][1]*m2.determinate()+matrix[0][2]*m3.determinate()-matrix[0][3]*m4.determinate());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Matrix4x4 matrix4x4 = (Matrix4x4) o;
+        return Arrays.equals(matrix, matrix4x4.matrix);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(matrix);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append("[");
+        for (float[] floats : matrix) {
+            str.append("[");
+            for (int j = 0; j < matrix.length; j++) {
+                str.append(floats[j]);
+                str.append(" ");
+            }
+            str.append("]");
+        }
+        str.append("]");
+        return str.toString();
     }
 }
