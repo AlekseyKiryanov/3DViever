@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class ObjReaderTes
+class ObjReaderTest {
 
     @Test
     public void testParseVertex01() {
