@@ -2,6 +2,10 @@ package com.cgvsu.render_engine;
 
 import java.util.ArrayList;
 
+<<<<<<< HEAD
+=======
+import com.cgvsu.math.Vector3f;
+>>>>>>> 43357fabac886a6464e74a214d0ddd3187f7df29
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.canvas.GraphicsContext;
