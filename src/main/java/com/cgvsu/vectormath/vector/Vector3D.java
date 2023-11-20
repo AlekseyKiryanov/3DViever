@@ -13,7 +13,7 @@ public class Vector3D{
         this.y = y;
         this.z = z;
     }
-    public double get(int index) {
+    public float get(int index) {
         switch (index){
             case 0: return x;
             case 1: return y;

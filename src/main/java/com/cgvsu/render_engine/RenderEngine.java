@@ -2,7 +2,10 @@ package com.cgvsu.render_engine;
 
 import java.util.ArrayList;
 
+<<<<<<< HEAD
+=======
 import com.cgvsu.math.Vector3f;
+>>>>>>> 43357fabac886a6464e74a214d0ddd3187f7df29
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.canvas.GraphicsContext;
@@ -37,6 +40,7 @@ public class RenderEngine {
             ArrayList<Point2f> resultPoints = new ArrayList<>();
             for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
                 Vector3D vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
+
 
                 Vector3D vertexVecmath = new Vector3D((float) vertex.get(0), (float) vertex.get(1), (float) vertex.get(2));
 
