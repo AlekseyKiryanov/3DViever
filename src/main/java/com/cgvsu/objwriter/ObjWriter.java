@@ -59,7 +59,7 @@ public class ObjWriter {
                 }
                 fw.append("\n");
             }
-            fw.write(String.format("# %d polygons - %d triangles", model.polygons.size()-triangles, triangles));
+            fw.write(String.format("# %d polygons - %d triangles\n", model.polygons.size()-triangles, triangles));
 
 
             fw.flush();

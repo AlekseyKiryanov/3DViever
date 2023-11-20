@@ -1,7 +1,5 @@
 package com.cgvsu.objreader;
 
-import com.cgvsu.math.Vector2f;
-import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.vectormath.vector.Vector2D;
@@ -60,10 +58,9 @@ public class ObjReader {
 	protected static Vector3D parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
 		try {
 			return new Vector3D(
-					Double.parseDouble(wordsInLineWithoutToken.get(0)),
-					Double.parseDouble(wordsInLineWithoutToken.get(1)),
-					Double.parseDouble(wordsInLineWithoutToken.get(2)));
-
+					Float.parseFloat(wordsInLineWithoutToken.get(0)),
+					Float.parseFloat(wordsInLineWithoutToken.get(1)),
+					Float.parseFloat(wordsInLineWithoutToken.get(2)));
 		} catch(NumberFormatException e) {
 			throw new ObjReaderException("Failed to parse float value.", lineInd);
 
@@ -75,8 +72,8 @@ public class ObjReader {
 	protected static Vector2D parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
 		try {
 			return new Vector2D(
-					Double.parseDouble(wordsInLineWithoutToken.get(0)),
-					Double.parseDouble(wordsInLineWithoutToken.get(1)));
+					Float.parseFloat(wordsInLineWithoutToken.get(0)),
+					Float.parseFloat(wordsInLineWithoutToken.get(1)));
 
 		} catch(NumberFormatException e) {
 			throw new ObjReaderException("Failed to parse float value.", lineInd);
@@ -89,10 +86,9 @@ public class ObjReader {
 	protected static Vector3D parseNormal(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
 		try {
 			return new Vector3D(
-					Double.parseDouble(wordsInLineWithoutToken.get(0)),
-					Double.parseDouble(wordsInLineWithoutToken.get(1)),
-					Double.parseDouble(wordsInLineWithoutToken.get(2)));
-
+					Float.parseFloat(wordsInLineWithoutToken.get(0)),
+					Float.parseFloat(wordsInLineWithoutToken.get(1)),
+					Float.parseFloat(wordsInLineWithoutToken.get(2)));
 		} catch(NumberFormatException e) {
 			throw new ObjReaderException("Failed to parse float value.", lineInd);
 
@@ -114,6 +110,7 @@ public class ObjReader {
 		result.setVertexIndices(onePolygonVertexIndices);
 		result.setTextureVertexIndices(onePolygonTextureVertexIndices);
 		result.setNormalIndices(onePolygonNormalIndices);
+		result.setLine(lineInd);
 		return result;
 	}
 

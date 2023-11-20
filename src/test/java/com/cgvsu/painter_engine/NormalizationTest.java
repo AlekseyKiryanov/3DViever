@@ -15,73 +15,62 @@ class NormalizationTest {
 
     @Test
     void cube() throws IOException {
-        Path fileName = Path.of("D:\\cube.obj");
+        Path fileName = Path.of("primitives\\cube.obj");
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 
         Model new_model = new Normalization(model).recalceNormales();
 
-        ObjWriter.write("D:\\cubeN.obj", new_model);
+        ObjWriter.write("primitives\\test.obj", new_model);
 
     }
 
     @Test
     void cilinder() throws IOException {
-        Path fileName = Path.of("D:\\cilinder.obj");
+        Path fileName = Path.of("primitives\\cylinder.obj");
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 
         Model new_model = new Normalization(model).recalceNormales();
 
-        ObjWriter.write("D:\\cilinderN.obj", new_model);
+        ObjWriter.write("primitives\\test.obj", new_model);
 
     }
 
     @Test
     void cone() throws IOException {
-        Path fileName = Path.of("D:\\cone.obj");
+        Path fileName = Path.of("primitives\\cone.obj");
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 
         Model new_model = new Normalization(model).recalceNormales();
 
-        ObjWriter.write("D:\\coneN.obj", new_model);
+        ObjWriter.write("primitives\\test.obj", new_model);
 
     }
 
     @Test
-    void cilinderR() throws IOException {
-        Path fileName = Path.of("D:\\cilinderR.obj");
+    void cilinderT() throws IOException {
+        Path fileName = Path.of("primitives\\cylinder.obj");
         String fileContent = Files.readString(fileName);
+
         Model model = ObjReader.read(fileContent);
+        Model t_model = new Triangulation(model).triangulate();
+        Model n_model = new Normalization(t_model).recalceNormales();
 
-        Model new_model = new Normalization(model).recalceNormales();
-
-        ObjWriter.write("D:\\cilinderRN.obj", new_model);
-
-    }
-
-    @Test
-    void tram() throws IOException {
-        Path fileName = Path.of("D:\\tatraT6B5_1.obj");
-        String fileContent = Files.readString(fileName);
-        Model model = ObjReader.read(fileContent);
-
-        Model new_model = new Normalization(model).recalceNormales();
-
-        ObjWriter.write("D:\\tatraT6B5_1N.obj", new_model);
+        ObjWriter.write("primitives\\test.obj", n_model);
 
     }
 
     @Test
     void torus() throws IOException {
-        Path fileName = Path.of("D:\\torus.obj");
+        Path fileName = Path.of("primitives\\torus.obj");
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 
         Model new_model = new Normalization(model).recalceNormales();
 
-        ObjWriter.write("D:\\tprusN.obj", new_model);
+        ObjWriter.write("primitives\\test.obj", new_model);
 
     }
 

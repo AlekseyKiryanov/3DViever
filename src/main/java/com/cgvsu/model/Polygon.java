@@ -11,6 +11,15 @@ public class Polygon {
     private ArrayList<Integer> normalIndices;
     private Vector3D normal;
 
+    private int line;
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line = line;
+    }
 
     public Polygon() {
         vertexIndices = new ArrayList<Integer>();

@@ -1,12 +1,15 @@
 package com.cgvsu.render_engine;
+import com.cgvsu.vectormath.matrix.Matrix4x4;
+import com.cgvsu.vectormath.vector.Vector3D;
+
 import javax.vecmath.Vector3f;
 import javax.vecmath.Matrix4f;
 
 public class Camera {
 
     public Camera(
-            final Vector3f position,
-            final Vector3f target,
+            final Vector3D position,
+            final Vector3D target,
             final float fov,
             final float aspectRatio,
             final float nearPlane,
@@ -19,11 +22,11 @@ public class Camera {
         this.farPlane = farPlane;
     }
 
-    public void setPosition(final Vector3f position) {
+    public void setPosition(final Vector3D position) {
         this.position = position;
     }
 
-    public void setTarget(final Vector3f target) {
+    public void setTarget(final Vector3D target) {
         this.target = target;
     }
 
@@ -31,32 +34,32 @@ public class Camera {
         this.aspectRatio = aspectRatio;
     }
 
-    public Vector3f getPosition() {
+    public Vector3D getPosition() {
         return position;
     }
 
-    public Vector3f getTarget() {
+    public Vector3D getTarget() {
         return target;
     }
 
-    public void movePosition(final Vector3f translation) {
-        this.position.add(translation);
+    public void movePosition(final Vector3D translation) {
+        this.position.addThis(translation);
     }
 
     public void moveTarget(final Vector3f translation) {
-        this.target.add(target);
+        this.target.addThis(target);
     }
 
-    Matrix4f getViewMatrix() {
+    Matrix4x4 getViewMatrix() {
         return GraphicConveyor.lookAt(position, target);
     }
 
-    Matrix4f getProjectionMatrix() {
+    Matrix4x4 getProjectionMatrix() {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
     }
 
-    private Vector3f position;
-    private Vector3f target;
+    private Vector3D position;
+    private Vector3D target;
     private float fov;
     private float aspectRatio;
     private float nearPlane;

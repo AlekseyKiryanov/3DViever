@@ -14,38 +14,38 @@ class TriangulationTest {
 
     @Test
     void cube() throws IOException {
-        Path fileName = Path.of("D:\\cubeN.obj");
+        Path fileName = Path.of("primitives\\cube.obj");
         String fileContent = Files.readString(fileName);
+
         Model model = ObjReader.read(fileContent);
+        Model n_model = new Normalization(model).recalceNormales();
+        Model t_model = new Triangulation(n_model).triangulate();
 
-        Model new_model = new Triangulation(model).triangulate();
-
-        ObjWriter.write("D:\\cubeR.obj", new_model);
-
+        ObjWriter.write("primitives\\test.obj", t_model);
     }
 
     @Test
     void cilinder() throws IOException {
-        Path fileName = Path.of("D:\\cilinderN.obj");
+        Path fileName = Path.of("primitives\\cylinder.obj");
         String fileContent = Files.readString(fileName);
+
         Model model = ObjReader.read(fileContent);
+        Model n_model = new Normalization(model).recalceNormales();
+        Model t_model = new Triangulation(n_model).triangulate();
 
-        Model new_model = new Triangulation(model).triangulate();
-
-        ObjWriter.write("D:\\cilinderR.obj", new_model);
-
+        ObjWriter.write("primitives\\test.obj", t_model);
     }
 
     @Test
     void cone() throws IOException {
-        Path fileName = Path.of("D:\\coneN.obj");
+        Path fileName = Path.of("primitives\\cone.obj");
         String fileContent = Files.readString(fileName);
+
         Model model = ObjReader.read(fileContent);
+        Model n_model = new Normalization(model).recalceNormales();
+        Model t_model = new Triangulation(n_model).triangulate();
 
-        Model new_model = new Triangulation(model).triangulate();
-
-        ObjWriter.write("D:\\coneR.obj", new_model);
-
+        ObjWriter.write("primitives\\test.obj", t_model);
     }
 
 }

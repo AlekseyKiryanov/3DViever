@@ -30,7 +30,7 @@ public class Triangulation {
             if (working_model.polygons.get(i).getVertexIndices().size() == 3) {
                 ans_model.polygons.add(working_model.polygons.get(i));
             } else {
-                triangulatePolygon(working_model.polygons.get(i), i);
+                triangulatePolygon(working_model.polygons.get(i));
             }
         }
 
@@ -38,7 +38,7 @@ public class Triangulation {
         return ans_model;
     }
 
-    private void triangulatePolygon(Polygon p, int N) {
+    private void triangulatePolygon(Polygon p) {
         int first_param = -1;
         int second_param = -1;
         int l = p.getVertexIndices().size();
@@ -133,7 +133,7 @@ public class Triangulation {
             }
 
             if (index > l * l * l) {
-                throw new BadPoligonException("Полигон переломленной формы", N);
+                throw new BadPoligonException("неверный порядок обхода (перекрест ребер)", p.getLine());
             }
 
         }
