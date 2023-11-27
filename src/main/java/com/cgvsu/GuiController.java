@@ -9,6 +9,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.layout.AnchorPane;
@@ -26,7 +27,10 @@ import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
 
+import static com.cgvsu.render_engine.RenderEngine.render;
+
 public class GuiController {
+
 
     final private float TRANSLATION = 0.5F;
 
@@ -50,34 +54,45 @@ public class GuiController {
 
     private Timeline timeline;
 
-    @FXML
-    private void initialize() {
-        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+@FXML
+private void initialize() {
+    anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
+    anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
-        timeline = new Timeline();
-        timeline.setCycleCount(Animation.INDEFINITE);
-
-        KeyFrame frame = new KeyFrame(Duration.millis(34), event -> {
-            //Работа в 30 ФПС
-            double width = canvas.getWidth();
-            double height = canvas.getHeight();
-
-            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-            camera.setAspectRatio((float) (width / height));
-
-            if (default_model != null) {
-                if (is_triangle.isSelected()) {
-                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height);
-                } else {
-                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
-                }
-            }
+    if (canvas != null) {
+        canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
+        canvas.setOnMouseDragged(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
+        canvas.setOnScroll(event2 -> {
+            camera.mouseDeltaY = event2.getDeltaY();
+            camera.mouseDeltaX = event2.getDeltaX();
+            camera.handleMouseInput(event2.getX(), event2.getY(), false, false);
         });
-
-        timeline.getKeyFrames().add(frame);
-        timeline.play();
     }
+
+    timeline = new Timeline();
+    timeline.setCycleCount(Animation.INDEFINITE);
+
+    KeyFrame frame = new KeyFrame(Duration.millis(34), event -> {
+        // Работа в 30 ФПС
+        double width = canvas.getWidth();
+        double height = canvas.getHeight();
+
+        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+        camera.setAspectRatio((float) (width / height));
+
+        if (default_model != null) {
+            if (is_triangle.isSelected()) {
+                render(canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height);
+            } else {
+                render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
+            }
+        }
+    });
+
+    timeline.getKeyFrames().add(frame);
+    timeline.play();
+}
+
 
     private void loadModel(Path fileName){
         try {
@@ -90,6 +105,7 @@ public class GuiController {
 
         }
     }
+
 
     @FXML
     private void onOpenModelMenuItemClick() {

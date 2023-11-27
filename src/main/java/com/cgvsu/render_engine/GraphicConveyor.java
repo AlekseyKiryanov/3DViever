@@ -14,6 +14,21 @@ public class GraphicConveyor {
                 {0, 0, 0, 1}};
         return new Matrix4x4(matrix);
     }
+    public static Matrix4x4 rotate(float angle, float axisX, float axisY, float axisZ) {
+        float radians = (float) Math.toRadians(angle);
+        float sin = (float) Math.sin(radians);
+        float cos = (float) Math.cos(radians);
+        float oneMinusCos = 1.0f - cos;
+
+        float[][] rotationMatrix = {
+                {cos + axisX * axisX * oneMinusCos, axisX * axisY * oneMinusCos - axisZ * sin, axisX * axisZ * oneMinusCos + axisY * sin, 0},
+                {axisY * axisX * oneMinusCos + axisZ * sin, cos + axisY * axisY * oneMinusCos, axisY * axisZ * oneMinusCos - axisX * sin, 0},
+                {axisZ * axisX * oneMinusCos - axisY * sin, axisZ * axisY * oneMinusCos + axisX * sin, cos + axisZ * axisZ * oneMinusCos, 0},
+                {0, 0, 0, 1}
+        };
+
+        return new Matrix4x4(rotationMatrix);
+    }
 
     public static Matrix4x4 lookAt(Vector3D eye, Vector3D target) {
         return lookAt(eye, target, new Vector3D(0F, 1.0F, 0F));
