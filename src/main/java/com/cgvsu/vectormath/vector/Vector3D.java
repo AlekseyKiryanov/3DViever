@@ -2,7 +2,7 @@ package com.cgvsu.vectormath.vector;
 
 import java.util.Objects;
 
-public class Vector3D{
+public class Vector3D {
     private float x;
     private float y;
     private float z;
@@ -13,11 +13,15 @@ public class Vector3D{
         this.y = y;
         this.z = z;
     }
+
     public float get(int index) {
-        switch (index){
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
+        switch (index) {
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
         }
         throw new IllegalArgumentException("Индекс выходит за границы");
     }
@@ -55,7 +59,7 @@ public class Vector3D{
     // Нормализация вектора
     public Vector3D normalize() {
         float len = length();
-        float var1 = (float)(1.0 / Math.sqrt((this.x * this.x + this.y * this.y + this.z * this.z)));
+        float var1 = (float) (1.0 / Math.sqrt((this.x * this.x + this.y * this.y + this.z * this.z)));
         if (Math.abs(len) < eps) {
             return new Vector3D(0, 0, 0);
 
@@ -76,15 +80,19 @@ public class Vector3D{
                 this.y * other.z - this.z * other.y,
                 this.z * other.x - this.x * other.z,
                 this.x * other.y - this.y * other.x
-            );
-        }
+        );
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Vector3D vector3D = (Vector3D) o;
-        return Float.compare(vector3D.x, x) == 0 && Float.compare(vector3D.y, y) == 0 && Float.compare(vector3D.z, z) == 0;
+
+        if (Math.abs(x - vector3D.x) > eps) return false;
+        if (Math.abs(y - vector3D.y) > eps) return false;
+        return Math.abs(z - vector3D.z) < eps;
     }
 
     @Override
@@ -114,6 +122,7 @@ public class Vector3D{
         this.y = other1.y - other2.y;
         this.z = other1.z - other2.z;
     }
+
     // Сложение векторов
     public final void addThis(Vector3D other1) {
         this.x += other1.x;
@@ -136,7 +145,7 @@ public class Vector3D{
     }
 
     // Векторное произведение векторов
-    public final void crossProduct(Vector3D other1,Vector3D other2) {
+    public final void crossProduct(Vector3D other1, Vector3D other2) {
         float v1 = other1.y * other2.z - other1.z * other2.y;
         float v2 = other1.z * other2.x - other1.x * other2.z;
         this.z = other1.x * other2.y - other1.y * other2.x;
