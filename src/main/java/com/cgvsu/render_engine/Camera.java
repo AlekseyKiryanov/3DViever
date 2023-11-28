@@ -3,7 +3,8 @@ import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
 
 import javax.vecmath.Vector3f;
-import javax.vecmath.Matrix4f;
+
+import static com.cgvsu.vectormath.matrix.Matrix4x4.*;
 
 public class Camera {
 
@@ -51,11 +52,58 @@ public class Camera {
     }
 
     Matrix4x4 getViewMatrix() {
-        return GraphicConveyor.lookAt(position, target);
+        return lookAt(position, target);
     }
 
     Matrix4x4 getProjectionMatrix() {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
+    }
+
+    private double mousePosX;
+    private double mousePosY;
+    public double mouseDeltaX;
+    public double mouseDeltaY;
+
+    public void handleMouseInput(double x, double y, boolean isPrimaryButtonDown, boolean isSecondaryButtonDown) {
+        if (isPrimaryButtonDown) {
+            // Вращение камеры вокруг объекта при зажатой левой кнопке мыши
+            rotateCamera((float) (y - mousePosY), (float) (y - mousePosY));
+        } else if (isSecondaryButtonDown) {
+            // Передвижение камеры влево/вправо при зажатой правой кнопке мыши
+            movePosition(new Vector3D(0, (float)(y - mousePosY) * 0.1f, 0));
+        } else {
+            // Передвижение камеры в зависимости от движения колесика мыши
+            movePosition(new Vector3D(0, 0,(float) mouseDeltaY * 0.05f));
+        }
+
+        mousePosX = x;
+        mousePosY = y;
+    }
+
+    private void rotateCamera(float dx, float dy) {
+        float rotationX = -dy * 0.2f;
+        float rotationY = -dx * 0.2f;
+
+        Matrix4x4 rotationMatrixX = rotate(rotationX, 1, 0, 0);
+        Matrix4x4 rotationMatrixY = rotate(rotationY, 0, 1, 0);
+
+        Matrix4x4 rotationMatrix = rotationMatrixX.multiply(rotationMatrixY);
+
+        position = multiplyMatrix4ByVector3(rotationMatrix, position);
+    }
+    private void rotateCamera(float dx, float dy, float dz) {
+        float rotationX = -dy * 0.2f;
+        float rotationY = -dx * 0.2f;
+        float rotationZ = -dz * 0.2f;
+
+        Matrix4x4 rotationMatrixX = rotate(rotationX, 1, 0, 0);
+        Matrix4x4 rotationMatrixY = rotate(rotationY, 0, 1, 0);
+        Matrix4x4 rotationMatrixZ = rotate(rotationZ, 0, 0, 1);
+
+        Matrix4x4 rotationMatrix1 = rotationMatrixX.multiply(rotationMatrixY);
+        Matrix4x4 rotationMatrix = rotationMatrix1.multiply(rotationMatrixZ);
+
+        position = multiplyMatrix4ByVector3(rotationMatrix, position);
     }
 
     private Vector3D position;
