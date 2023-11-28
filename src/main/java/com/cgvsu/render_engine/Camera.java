@@ -1,14 +1,10 @@
 package com.cgvsu.render_engine;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 
 import javax.vecmath.Vector3f;
-import javax.vecmath.Matrix4f;
 
-import static com.cgvsu.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
-import static com.cgvsu.render_engine.GraphicConveyor.rotate;
+import static com.cgvsu.vectormath.matrix.Matrix4x4.*;
 
 public class Camera {
 
@@ -56,7 +52,7 @@ public class Camera {
     }
 
     Matrix4x4 getViewMatrix() {
-        return GraphicConveyor.lookAt(position, target);
+        return lookAt(position, target);
     }
 
     Matrix4x4 getProjectionMatrix() {
@@ -88,8 +84,8 @@ public class Camera {
         float rotationX = -dy * 0.2f;
         float rotationY = -dx * 0.2f;
 
-        Matrix4x4 rotationMatrixX = GraphicConveyor.rotate(rotationX, 1, 0, 0);
-        Matrix4x4 rotationMatrixY = GraphicConveyor.rotate(rotationY, 0, 1, 0);
+        Matrix4x4 rotationMatrixX = rotate(rotationX, 1, 0, 0);
+        Matrix4x4 rotationMatrixY = rotate(rotationY, 0, 1, 0);
 
         Matrix4x4 rotationMatrix = rotationMatrixX.multiply(rotationMatrixY);
 
@@ -100,9 +96,9 @@ public class Camera {
         float rotationY = -dx * 0.2f;
         float rotationZ = -dz * 0.2f;
 
-        Matrix4x4 rotationMatrixX = GraphicConveyor.rotate(rotationX, 1, 0, 0);
-        Matrix4x4 rotationMatrixY = GraphicConveyor.rotate(rotationY, 0, 1, 0);
-        Matrix4x4 rotationMatrixZ = GraphicConveyor.rotate(rotationZ, 0, 0, 1);
+        Matrix4x4 rotationMatrixX = rotate(rotationX, 1, 0, 0);
+        Matrix4x4 rotationMatrixY = rotate(rotationY, 0, 1, 0);
+        Matrix4x4 rotationMatrixZ = rotate(rotationZ, 0, 0, 1);
 
         Matrix4x4 rotationMatrix1 = rotationMatrixX.multiply(rotationMatrixY);
         Matrix4x4 rotationMatrix = rotationMatrix1.multiply(rotationMatrixZ);
