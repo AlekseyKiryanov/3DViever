@@ -1,4 +1,5 @@
 package com.cgvsu.render_engine;
+
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
 
@@ -65,16 +66,23 @@ public class Camera {
     public double mouseDeltaY;
 
     public void handleMouseInput(double x, double y, boolean isPrimaryButtonDown, boolean isSecondaryButtonDown) {
-        if (isPrimaryButtonDown) {
+         if (isPrimaryButtonDown) {
             // Вращение камеры вокруг объекта при зажатой левой кнопке мыши
-            rotateCamera((float) (y - mousePosY), (float) (y - mousePosY));
+            rotateCamera((float) (x - mousePosX), (float) (y - mousePosY));
         } else if (isSecondaryButtonDown) {
             // Передвижение камеры влево/вправо при зажатой правой кнопке мыши
-            movePosition(new Vector3D(0, (float)(y - mousePosY) * 0.1f, 0));
+            movePosition(new Vector3D((float) (x - mousePosX) * 0.1f, (float) (+y - mousePosY) * 0.1f, 0));
         } else {
             // Передвижение камеры в зависимости от движения колесика мыши
-            movePosition(new Vector3D(0, 0,(float) mouseDeltaY * 0.05f));
+            // movePosition(new Vector3D(0, 0,(float) mouseDeltaY * 0.05f));
+            if (mouseDeltaY > 0) {
+                position.subtractThis((position.subtract(target).divide(75)));
+            } else if (mouseDeltaY < 0) {
+                position.addThis((position.subtract(target).divide(75)));
+            }
+            mouseDeltaY = 0;
         }
+
 
         mousePosX = x;
         mousePosY = y;
@@ -91,6 +99,7 @@ public class Camera {
 
         position = multiplyMatrix4ByVector3(rotationMatrix, position);
     }
+
     private void rotateCamera(float dx, float dy, float dz) {
         float rotationX = -dy * 0.2f;
         float rotationY = -dx * 0.2f;

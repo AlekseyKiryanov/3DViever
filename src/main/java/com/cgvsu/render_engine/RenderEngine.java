@@ -1,20 +1,20 @@
 package com.cgvsu.render_engine;
 
-import java.util.ArrayList;
-
+import com.cgvsu.painter_engine.ProtoCurvePainter;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
+import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.canvas.GraphicsContext;
 
 import com.cgvsu.model.Model;
-
-import javax.vecmath.Point2f;
 
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 import static com.cgvsu.vectormath.matrix.Matrix4x4.multiplyMatrix4ByVector3;
 import static com.cgvsu.vectormath.matrix.Matrix4x4.rotateScaleTranslate;
 
 public class RenderEngine {
+
+    //private ProtoCurvePainter painter;
 
     public static void render(
             final GraphicsContext graphicsContext,
@@ -23,6 +23,7 @@ public class RenderEngine {
             final int width,
             final int height)
     {
+        ProtoCurvePainter painter = new ProtoCurvePainter(graphicsContext, width, height);
         Matrix4x4 modelMatrix = rotateScaleTranslate();
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
@@ -33,33 +34,19 @@ public class RenderEngine {
 
         final int nPolygons = mesh.polygons.size();
         for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
-            final int nVerticesInPolygon = mesh.polygons.get(polygonInd).getVertexIndices().size();
 
-            ArrayList<Point2f> resultPoints = new ArrayList<>();
-            for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-                Vector3D vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
+            Vector3D vertex1 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(0));
+            Vector2D resultPoint1 = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex1), width, height);
+
+            Vector3D vertex2 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(1));
+            Vector2D resultPoint2 = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex2), width, height);
+
+            Vector3D vertex3 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(2));
+            Vector2D resultPoint3 = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex3), width, height);
+
+            painter.paintTriangle(resultPoint1, resultPoint2, resultPoint3, multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex1).get(2)+3, multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex2).get(2)+3, multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex3).get(2)+3);
 
 
-                Vector3D vertexVecmath = new Vector3D((float) vertex.get(0), (float) vertex.get(1), (float) vertex.get(2));
-
-                Point2f resultPoint = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertexVecmath), width, height);
-                resultPoints.add(resultPoint);
-            }
-
-            for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-                graphicsContext.strokeLine(
-                        resultPoints.get(vertexInPolygonInd - 1).x,
-                        resultPoints.get(vertexInPolygonInd - 1).y,
-                        resultPoints.get(vertexInPolygonInd).x,
-                        resultPoints.get(vertexInPolygonInd).y);
-            }
-
-            if (nVerticesInPolygon > 0)
-                graphicsContext.strokeLine(
-                        resultPoints.get(nVerticesInPolygon - 1).x,
-                        resultPoints.get(nVerticesInPolygon - 1).y,
-                        resultPoints.get(0).x,
-                        resultPoints.get(0).y);
         }
     }
 }

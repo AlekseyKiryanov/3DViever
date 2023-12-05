@@ -35,13 +35,17 @@ public class Normalization {
                 Vector3D point = working_model.vertices.get(working_model.polygons.get(i).getVertexIndices().get(j));
 
                 Vector3D normal = vec1.subtract(point).crossProduct(vec2.subtract(point)).normalize();
+
                 new_normals.add(ans_model.normals.size());
                 ans_model.normals.add(normal);
+
+
                 sumNormals = sumNormals.add(normal);
 
                 vertexes_at_polygons.put(working_model.polygons.get(i).getVertexIndices().get(j), i);
 
             }
+
 
             ans_model.polygons.get(i).setNormalIndices(new_normals);
             sumNormals = sumNormals.divide(l);
@@ -51,6 +55,9 @@ public class Normalization {
         }
 
         for (int i = 0; i < p; i++) {
+
+
+
             int l = ans_model.polygons.get(i).getVertexIndices().size();
             for (int j = 0; j < l; j++) {
 
@@ -67,7 +74,7 @@ public class Normalization {
                 }
 
                 if (k >= 1) {
-                    ans_model.normals.set(ans_model.polygons.get(i).getNormalIndices().get(j), sumNormals.divide(k).normalize());
+                    ans_model.normals.set(   ans_model.polygons.get(i).getNormalIndices().get(j) , sumNormals.divide(k).normalize());
                 }
 
             }

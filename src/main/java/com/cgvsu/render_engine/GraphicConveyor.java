@@ -1,5 +1,6 @@
 package com.cgvsu.render_engine;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
+import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;
 
 import javax.vecmath.*;
@@ -27,7 +28,7 @@ public class GraphicConveyor {
 
 
 
-        public static Point2f vertexToPoint(final Vector3D vertex, final int width, final int height) {
-        return new Point2f((float) vertex.get(0) * width + width / 2.0F, (float) -vertex.get(1) * height + height / 2.0F);
+        public static Vector2D vertexToPoint(final Vector3D vertex, final int width, final int height) {
+        return new Vector2D((float) vertex.get(0) * width + width / 2.0F, (float) -vertex.get(1) * height + height / 2.0F);
     }
 }

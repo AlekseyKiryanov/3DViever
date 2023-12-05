@@ -81,11 +81,11 @@ private void initialize() {
         camera.setAspectRatio((float) (width / height));
 
         if (default_model != null) {
-            if (is_triangle.isSelected()) {
+     //       if (is_triangle.isSelected()) {
                 render(canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height);
-            } else {
-                render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
-            }
+     //       } else {
+    //            render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
+    //        }
         }
     });
 
