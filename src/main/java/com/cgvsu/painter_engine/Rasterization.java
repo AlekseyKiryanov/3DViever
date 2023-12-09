@@ -1,11 +1,12 @@
 package com.cgvsu.painter_engine;
 
 import com.cgvsu.vectormath.vector.Vector2D;
+import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
-public class ProtoCurvePainter {
+public class Rasterization {
 
 
     private final GraphicsContext graphicsContext;
@@ -32,16 +33,26 @@ public class ProtoCurvePainter {
 
     private float[][] z_boofer;
 
+    private Vector3D camera;
+
+    private Vector3D light;
+    private Vector3D n1;
+    private Vector3D n2;
+    private Vector3D n3;
+
+
     private Color C;
 
-    public ProtoCurvePainter(GraphicsContext graphicsContext, int width, int height) {
+    public Rasterization(GraphicsContext graphicsContext, int width, int height, Vector3D light, Color C) {
+        this.C = C;
         this.graphicsContext = graphicsContext;
         this.pixelWriter = graphicsContext.getPixelWriter();
         this.width = width;
         this.height = height;
+        this.light = light.normalize();
         z_boofer = new float[width][height];
-        for (int i = 0; i <width; i++){
-            for (int j = 0; j <height; j++){
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 z_boofer[i][j] = -200;
             }
         }
@@ -65,23 +76,62 @@ public class ProtoCurvePainter {
         float beta = (float) (x - x3) / caff3 - alpha * caff1;
         float gama = 1 - alpha - beta;
         //System.out.println(alpha + " " + beta + " " + gama);
-    //    alpha = Math.min(1, Math.max(alpha, 0));
-    //    beta = Math.min(1, Math.max(beta, 0));
-    //    gama = Math.min(1, Math.max(gama, 0));
+        //alpha = Math.min(1, Math.max(alpha, 0));
+        //  beta = Math.min(1, Math.max(beta, 0));
+        //  gama = Math.min(1, Math.max(gama, 0));
 
-        float z = (float) alpha*z1 + beta*z2 + gama*z3;
-        if (z > z_boofer[x][y]){
-            //System.out.println(z);
-            this.z_boofer[x][y] = z;
-            //System.out.println(this.z_boofer[x][y]);
-            pixelWriter.setColor(x, y, C);
+
+        float z = (float) alpha * z1 + beta * z2 + gama * z3;
+
+        if (x < 0 || y < 0 || x >= width || y >= height || (z > z_boofer[x][y]) == false) {
+            return;
         }
+
+        alpha = Math.min(1, Math.max(alpha, 0));
+        beta = Math.min(1, Math.max(beta, 0));
+        gama = Math.min(1, Math.max(gama, 0));
+
+        Vector3D N = new Vector3D(0, 0, 0);
+        N.addThis(n1.multiply(alpha));
+        N.addThis(n2.multiply(beta));
+        N.addThis(n3.multiply(gama));
+
+        float k = 0.3F;
+        float l = -1 * light.dotProduct(N);
+        l = Math.min(1, Math.max(l, 0));
+        //System.out.println(z);
+        this.z_boofer[x][y] = z;
+        //System.out.println(this.z_boofer[x][y]);
+        float m = (1 - k) + k * l;
+        pixelWriter.setColor(x, y, Color.color(C.getRed()*m, C.getGreen()*m,C.getBlue()*m));
+
 
 
     }
 
-    public void paintTriangle(Vector2D a, Vector2D b, Vector2D c, float z1, float z2, float z3){
-        paintTriangle(Math.round(a.get(0)) ,Math.round(a.get(1)),Math.round(b.get(0)), Math.round(b.get(1)),Math.round(c.get(0)),Math.round(c.get(1)), z1, z2, z3);
+    public void paintTriangle(Vector2D a, Vector2D b, Vector2D c,
+                              float z1, float z2, float z3,
+                              Vector3D n1, Vector3D n2, Vector3D n3) {
+
+        if (a.get(0) < 0 && b.get(0) < 0 && c.get(0) < 0) {
+            return;
+        }
+        if (a.get(1) < 0 && b.get(1) < 0 && c.get(1) < 0) {
+            return;
+        }
+        if (a.get(0) >= width && b.get(0) >= width && c.get(0) >= width) {
+            return;
+        }
+        if (a.get(1) >= height && b.get(1) >= height && c.get(1) >= height) {
+            return;
+        }
+
+        this.n1 = n1;
+        this.n2 = n2;
+        this.n3 = n3;
+
+        paintTriangle(Math.round(a.get(0)), Math.round(a.get(1)), Math.round(b.get(0)), Math.round(b.get(1)), Math.round(c.get(0)), Math.round(c.get(1)), z1, z2, z3);
+
     }
 
     public void paintTriangle(int x1, int y1, int x2, int y2, int x3, int y3, float z1, float z2, float z3) {
@@ -98,10 +148,10 @@ public class ProtoCurvePainter {
         this.y1 = y1;
         this.y2 = y2;
         this.y3 = y3;
-        C = Color.color(Math.random(), Math.random(), Math.random());
-       //paintDot(x1, y1, Color.YELLOWGREEN);
-      // paintDot(x2, y2, Color.YELLOWGREEN);
-      //paintDot(x3, y3, Color.YELLOWGREEN);
+        //C = Color.color(Math.random(), Math.random(), Math.random());
+        //paintDot(x1, y1, Color.YELLOWGREEN);
+        // paintDot(x2, y2, Color.YELLOWGREEN);
+        //paintDot(x3, y3, Color.YELLOWGREEN);
         boolean flag = false;
         if (x2 == x3) {
             x3++;
@@ -114,7 +164,7 @@ public class ProtoCurvePainter {
         caff4 = (float) (y2 - y3);
         caff5 = (float) (x2 - x3);
 
-        if (flag){
+        if (flag) {
             x3--;
         }
 
@@ -162,8 +212,9 @@ public class ProtoCurvePainter {
             wx2 += dx12;
         }
         if (y1 == y2) {
-            wx1 = (float) x1;
-            wx2 = (float) x2;
+            wx1 = (float) Math.min(x1, x2);
+            wx2 = (float) Math.max(x1, x2);
+            //System.out.println("44");
         }
         if (_dx13 < dx23) {
             float c = dx23;
@@ -185,8 +236,8 @@ public class ProtoCurvePainter {
 
     public void clear() {
         graphicsContext.clearRect(0, 0, 8000, 6000);
-        for (int i = 0; i <width; i++){
-            for (int j = 0; j <height; j++){
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 z_boofer[i][j] = -200;
             }
         }

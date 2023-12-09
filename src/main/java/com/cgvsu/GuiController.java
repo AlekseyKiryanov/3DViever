@@ -12,11 +12,15 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
+// java.awt.*;
+
+import javafx.scene.paint.Color;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -53,8 +57,9 @@ public class GuiController {
             1.0F, 1, 0.01F, 100);
 
     private Timeline timeline;
+    private boolean log = false;
 
-@FXML
+    @FXML
 private void initialize() {
     anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
     anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
@@ -72,7 +77,7 @@ private void initialize() {
     timeline = new Timeline();
     timeline.setCycleCount(Animation.INDEFINITE);
 
-    KeyFrame frame = new KeyFrame(Duration.millis(34), event -> {
+    KeyFrame frame = new KeyFrame(Duration.millis(100), event -> {
         // Работа в 30 ФПС
         double width = canvas.getWidth();
         double height = canvas.getHeight();
@@ -82,7 +87,8 @@ private void initialize() {
 
         if (default_model != null) {
      //       if (is_triangle.isSelected()) {
-                render(canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height);
+                render(canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height, log, main_color.getValue());
+                log = false;
      //       } else {
     //            render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
     //        }
@@ -121,6 +127,8 @@ private void initialize() {
         loadModel(Path.of(file.getAbsolutePath()));
     }
 
+    @FXML
+    private ColorPicker main_color;
     @FXML
     private void loadCube() {
         loadModel(Path.of("primitives\\cube.obj"));
@@ -169,5 +177,10 @@ private void initialize() {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3D(0, -TRANSLATION, 0));
+    }
+
+    @FXML
+    public void printLog(ActionEvent actionEvent) {
+        this.log = !this.log;
     }
 }

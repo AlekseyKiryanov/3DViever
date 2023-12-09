@@ -67,7 +67,7 @@ public class Normalization {
                 int k = 0;
                 for (int n = 0; n < m; n++) {
 
-                    if (ans_model.polygons.get(i).getNormal().dotProduct(ans_model.polygons.get(other_polygons.get(n)).getNormal()) > 0.88) {
+                    if (ans_model.polygons.get(i).getNormal().dotProduct(ans_model.polygons.get(other_polygons.get(n)).getNormal()) > 0.5) {
                         sumNormals = sumNormals.add(ans_model.polygons.get(other_polygons.get(n)).getNormal());
                         k++;
                     }
