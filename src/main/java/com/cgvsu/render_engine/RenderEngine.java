@@ -59,7 +59,7 @@ public class RenderEngine {
             painter.paintTriangle(resultPoint1, resultPoint2, resultPoint3,
                     multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex1).get(2) + 3, multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex2).get(2) + 3, multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex3).get(2) + 3,
                     mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(0)), mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(1)), mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(2)));
-   
+
 
         }
     }
