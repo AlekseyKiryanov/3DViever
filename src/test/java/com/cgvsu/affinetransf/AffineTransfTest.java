@@ -4,8 +4,6 @@ import com.cgvsu.vectormath.vector.Vector3D;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AffineTransfTest {
 
     @Test
@@ -44,7 +42,7 @@ class AffineTransfTest {
     @Test
     void transformVertex04() {
         AffineTransf A = new AffineTransf();
-        A.setOr(OrderRotation.ZYX);
+        A.setOrderRotation(OrderRotation.ZYX);
         A.setRz(-45);
         A.setRy(-90);
         Vector3D V = new Vector3D(1,0,0);
@@ -54,7 +52,7 @@ class AffineTransfTest {
     @Test
     void transformVertex04a() {
         AffineTransf A = new AffineTransf();
-        A.setOr(OrderRotation.YXZ);
+        A.setOrderRotation(OrderRotation.YXZ);
         A.setRz(-45);
         A.setRy(-90);
         Vector3D V = new Vector3D(1,0,0);

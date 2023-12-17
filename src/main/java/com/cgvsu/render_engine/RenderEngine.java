@@ -1,6 +1,10 @@
 package com.cgvsu.render_engine;
 
+import com.cgvsu.logger.LoggerSingleton;
+import com.cgvsu.logger.SimpleConsoleLogger;
 import com.cgvsu.painter_engine.Rasterization;
+import com.cgvsu.painter_engine.TriangleForPainting;
+import com.cgvsu.painter_engine.light.Lighter;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;
@@ -15,20 +19,24 @@ import static com.cgvsu.vectormath.matrix.Matrix4x4.rotateScaleTranslate;
 
 public class RenderEngine {
 
+    private final static SimpleConsoleLogger log = LoggerSingleton.getInstance();
+
     //private ProtoCurvePainter painter;
 
     public static void render(
+            final Lighter lighte,
             final GraphicsContext graphicsContext,
             final Camera camera,
             final Model mesh,
             final int width,
             final int height,
-            final boolean log,
             final Color color) {
-        if (log) {
-            System.out.println("==Camera position: " + camera.getPosition() + "==");
+
+
+        if (log.isLoggable(System.Logger.Level.TRACE)) {
+            log.log(System.Logger.Level.TRACE, "==Camera position: " + camera.getPosition() + "==");
         }
-        Rasterization painter = new Rasterization(graphicsContext, width, height, camera.getPosition(), color);
+        Rasterization painter = new Rasterization(lighte, graphicsContext, width, height, camera.getPosition(), color);
         Matrix4x4 modelMatrix = rotateScaleTranslate();
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
@@ -51,14 +59,14 @@ public class RenderEngine {
             Vector3D vertex3 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(2));
             Vector2D resultPoint3 = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex3), width, height);
 
-            if (log) {
-                System.out.println("Treangle " + polygonInd + " A=" + resultPoint1 + " B=" + resultPoint2 + " C=" + resultPoint3);
+            if (log.isLoggable(System.Logger.Level.TRACE)) {
+                log.log(System.Logger.Level.TRACE, "Treangle " + polygonInd + " A=" + resultPoint1 + " B=" + resultPoint2 + " C=" + resultPoint3);
             }
 
 
-            painter.paintTriangle(resultPoint1, resultPoint2, resultPoint3,
+            painter.paintTriangle(new TriangleForPainting(resultPoint1, resultPoint2, resultPoint3,
                     multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex1).get(2) + 3, multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex2).get(2) + 3, multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex3).get(2) + 3,
-                    mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(0)), mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(1)), mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(2)));
+                    mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(0)), mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(1)), mesh.normals.get(mesh.polygons.get(polygonInd).getNormalIndices().get(2))));
 
 
         }

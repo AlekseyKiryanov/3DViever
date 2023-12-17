@@ -15,7 +15,7 @@ class NormalizationTest {
 
     @Test
     void cube() throws IOException {
-        Path fileName = Path.of("D:\\gps2.obj");
+        Path fileName = Path.of("primitives\\cube");
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 

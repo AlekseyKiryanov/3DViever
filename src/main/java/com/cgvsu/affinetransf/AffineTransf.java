@@ -1,7 +1,6 @@
 package com.cgvsu.affinetransf;
 
 
-import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
 import com.cgvsu.vectormath.vector.Vector3D;
 
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 public class AffineTransf {
 
     //Перечесисление отвечающее за порядок поворотов в каждой из плоскостей
-    private OrderRotation or = OrderRotation.ZYX;
+    private OrderRotation orderRotation = OrderRotation.ZYX;
     //Параметры масштабирования
     private float Sx = 1;
     private float Sy = 1;
@@ -40,8 +39,8 @@ public class AffineTransf {
     public AffineTransf() {
     }
 
-    public AffineTransf(OrderRotation or, float sx, float sy, float sz, float rx, float ry, float rz, float tx, float ty, float tz) {
-        this.or = or;
+    public AffineTransf(OrderRotation orderRotation, float sx, float sy, float sz, float rx, float ry, float rz, float tx, float ty, float tz) {
+        this.orderRotation = orderRotation;
         Sx = sx;
         Sy = sy;
         Sz = sz;
@@ -103,7 +102,7 @@ public class AffineTransf {
         A = new Matrix4f(T);
 
         //Перемножение матриц поворота согласно их порядку
-        switch (or) {
+        switch (orderRotation) {
             case ZYX -> {
                 R.mul(X);
                 R.mul(Y);
@@ -165,12 +164,12 @@ public class AffineTransf {
     }
 
 
-    public OrderRotation getOr() {
-        return or;
+    public OrderRotation getOrderRotation() {
+        return orderRotation;
     }
 
-    public void setOr(OrderRotation or) {
-        this.or = or;
+    public void setOrderRotation(OrderRotation orderRotation) {
+        this.orderRotation = orderRotation;
         calculateA();
     }
 

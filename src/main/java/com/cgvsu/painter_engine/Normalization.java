@@ -10,6 +10,8 @@ public class Normalization {
 
     private final Model working_model;
 
+    private final float LEVEL_OF_EDGE_SMOOTHING = 0.8F;
+
     public Normalization(Model working_model) {
         this.working_model = working_model;
     }
@@ -67,7 +69,8 @@ public class Normalization {
                 int k = 0;
                 for (int n = 0; n < m; n++) {
 
-                    if (ans_model.polygons.get(i).getNormal().dotProduct(ans_model.polygons.get(other_polygons.get(n)).getNormal()) > 0.5) {
+                    if (ans_model.polygons.get(i).getNormal().dotProduct(ans_model.polygons.get(other_polygons.get(n)).getNormal()) > LEVEL_OF_EDGE_SMOOTHING) {
+                        //Усредняются только те нормали, между которыми угол достаточно острый.
                         sumNormals = sumNormals.add(ans_model.polygons.get(other_polygons.get(n)).getNormal());
                         k++;
                     }

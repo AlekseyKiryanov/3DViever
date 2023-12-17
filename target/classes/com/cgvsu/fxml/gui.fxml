@@ -42,7 +42,7 @@
                     <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </CheckMenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#printLog" text="PrintLog">
+            <MenuItem mnemonicParsing="false" onAction="#activeTraceLog" text="PrintLog">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -80,10 +80,28 @@
                 </accelerator>
             </MenuItem>
         </Menu>
+
+        <Menu mnemonicParsing="false" text="Освещение">
+            <MenuItem mnemonicParsing="false" onAction="#setPrimeLighte" text="Простое освещение">
+
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#setPoligonLighte" text="Полигональное">
+
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#setBlikeLighte" text="Бликовое">
+
+            </MenuItem>
+
+            <MenuItem mnemonicParsing="false" onAction="#setBorderLighte" text="Краевое">
+
+            </MenuItem>
+        </Menu>
+
+
     </MenuBar>
 
     <Canvas fx:id="canvas" height="870" width="1600" AnchorPane.topAnchor="30.0" />
-   <ColorPicker fx:id="main_color" layoutY="30.0">
+   <ColorPicker fx:id="mainColor" layoutY="30.0">
       <value>
          <Color red="0.03125" green="0.36666667461395264" blue="0.75" />
       </value></ColorPicker>

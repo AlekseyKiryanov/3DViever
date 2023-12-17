@@ -1,15 +1,16 @@
 package com.cgvsu;
 
+import com.cgvsu.logger.LoggerSingleton;
+import com.cgvsu.logger.SimpleConsoleLogger;
 import com.cgvsu.painter_engine.Normalization;
 import com.cgvsu.painter_engine.Triangulation;
-import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.painter_engine.light.*;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ColorPicker;
@@ -20,12 +21,10 @@ import javafx.util.Duration;
 
 // java.awt.*;
 
-import javafx.scene.paint.Color;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
-import javax.vecmath.Vector3f;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
@@ -37,6 +36,8 @@ public class GuiController {
 
 
     final private float TRANSLATION = 0.5F;
+
+    final private int RELOAD_MILISECONDS = 50; //Время перерисовки кадра.
 
     @FXML
     public CheckMenuItem is_triangle;
@@ -57,50 +58,48 @@ public class GuiController {
             1.0F, 1, 0.01F, 100);
 
     private Timeline timeline;
-    private boolean log = false;
+
+    private Lighter lighte = new PrimeLighte();
+
+    private final SimpleConsoleLogger log = LoggerSingleton.getInstance();
 
     @FXML
-private void initialize() {
-    anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-    anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+    private void initialize() {
+        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
+        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
-    if (canvas != null) {
-        canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
-        canvas.setOnMouseDragged(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
-        canvas.setOnScroll(event2 -> {
-            camera.mouseDeltaY = event2.getDeltaY();
-            camera.mouseDeltaX = event2.getDeltaX();
-            camera.handleMouseInput(event2.getX(), event2.getY(), false, false);
+        if (canvas != null) {
+            canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
+            canvas.setOnMouseDragged(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
+            canvas.setOnScroll(event2 -> {
+                camera.mouseDeltaY = event2.getDeltaY();
+                camera.mouseDeltaX = event2.getDeltaX();
+                camera.handleMouseInput(event2.getX(), event2.getY(), false, false);
+            });
+        }
+
+        timeline = new Timeline();
+        timeline.setCycleCount(Animation.INDEFINITE);
+
+        KeyFrame frame = new KeyFrame(Duration.millis(RELOAD_MILISECONDS), event -> {
+            double width = canvas.getWidth();
+            double height = canvas.getHeight();
+
+            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+            camera.setAspectRatio((float) (width / height));
+
+            if (default_model != null) {
+                render(lighte, canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height, mainColor.getValue());
+                log.setSameLevel(System.Logger.Level.OFF);
+            }
         });
+
+        timeline.getKeyFrames().add(frame);
+        timeline.play();
     }
 
-    timeline = new Timeline();
-    timeline.setCycleCount(Animation.INDEFINITE);
 
-    KeyFrame frame = new KeyFrame(Duration.millis(100), event -> {
-        // Работа в 30 ФПС
-        double width = canvas.getWidth();
-        double height = canvas.getHeight();
-
-        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-        camera.setAspectRatio((float) (width / height));
-
-        if (default_model != null) {
-     //       if (is_triangle.isSelected()) {
-                render(canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height, log, main_color.getValue());
-                log = false;
-     //       } else {
-    //            render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
-    //        }
-        }
-    });
-
-    timeline.getKeyFrames().add(frame);
-    timeline.play();
-}
-
-
-    private void loadModel(Path fileName){
+    private void loadModel(Path fileName) {
         try {
             String fileContent = Files.readString(fileName);
             default_model = ObjReader.read(fileContent);
@@ -128,7 +127,27 @@ private void initialize() {
     }
 
     @FXML
-    private ColorPicker main_color;
+    private ColorPicker mainColor;
+
+    @FXML
+    private void setPrimeLighte(){
+        lighte = new PrimeLighte();
+    }
+
+    @FXML
+    private void setPoligonLighte(){
+        lighte = new PoligonLighte();
+    }
+
+    @FXML
+    private void setBlikeLighte(){
+        lighte = new BlikeLighte();
+    }
+
+    @FXML
+    private void setBorderLighte(){
+        lighte = new BorderLighte();
+    }
     @FXML
     private void loadCube() {
         loadModel(Path.of("primitives\\cube.obj"));
@@ -180,7 +199,7 @@ private void initialize() {
     }
 
     @FXML
-    public void printLog(ActionEvent actionEvent) {
-        this.log = !this.log;
+    public void activeTraceLog(ActionEvent actionEvent) {
+        log.setSameLevel(System.Logger.Level.TRACE);
     }
 }
