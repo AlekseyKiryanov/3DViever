@@ -15,6 +15,28 @@ public class Matrix4x4{
         }
         this.matrix = data;
     }
+    public Matrix4x4(Matrix4x4 matrix4x4) {
+
+        this.matrix = matrix4x4.getMatrix();
+    }
+    public Matrix4x4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44) {
+        matrix[0][0] = m11;
+        matrix[0][1] = m12;
+        matrix[0][2] = m13;
+        matrix[0][3] = m14;
+        matrix[1][0] = m21;
+        matrix[1][1] = m22;
+        matrix[1][2] = m23;
+        matrix[1][3] = m24;
+        matrix[2][0] = m31;
+        matrix[2][1] = m32;
+        matrix[2][2] = m33;
+        matrix[2][3] = m34;
+        matrix[3][0] = m41;
+        matrix[3][1] = m42;
+        matrix[3][2] = m43;
+        matrix[3][3] = m44;
+    }
 
     public float[][] getMatrix() {
         return matrix;
@@ -63,6 +85,16 @@ public class Matrix4x4{
             }
         }
         return new Vector4D(result[0], result[1], result[2], result[3]);
+    }
+
+    public Matrix4x4 multiply(float num) {
+        float[][] result = new float[4][4];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result[i][j] += this.matrix[i][j] * num;
+            }
+        }
+        return new Matrix4x4(result);
     }
 
     // Умножение на матрицу

@@ -62,19 +62,18 @@ public class Camera {
 
     private double mousePosX;
     private double mousePosY;
-    public double mouseDeltaX;
     public double mouseDeltaY;
 
     public void handleMouseInput(double x, double y, boolean isPrimaryButtonDown, boolean isSecondaryButtonDown) {
-         if (isPrimaryButtonDown) {
-            // Вращение камеры вокруг объекта при зажатой левой кнопке мыши
+
+        if (isPrimaryButtonDown) {
+    // Вращение камеры вокруг объекта при зажатой левой кнопке мыши
             rotateCamera((float) (x - mousePosX), (float) (y - mousePosY));
         } else if (isSecondaryButtonDown) {
-            // Передвижение камеры влево/вправо при зажатой правой кнопке мыши
+    // Передвижение камеры влево/вправо при зажатой правой кнопке мыши
             movePosition(new Vector3D((float) (x - mousePosX) * 0.1f, (float) (+y - mousePosY) * 0.1f, 0));
         } else {
-            // Передвижение камеры в зависимости от движения колесика мыши
-            // movePosition(new Vector3D(0, 0,(float) mouseDeltaY * 0.05f));
+    // Передвижение камеры в зависимости от движения колесика мыши
             if (mouseDeltaY > 0) {
                 position.subtractThis((position.subtract(target).divide(75)));
             } else if (mouseDeltaY < 0) {

@@ -1,16 +1,26 @@
 package com.cgvsu.affinetransf;
+//Аффинные преобразования. В программе реализована только часть графического конвейера. Нет перегонки из локальных координат в мировые координаты сцены. Вам нужно реализовать её, то есть добавить аффинные преобразования: масштабирование, вращение, перенос. Можете использовать наработки
+//        студентов из предыдущей задачи. И не забудьте про тесты, без них визуально
+//        может быть сложно отследить баги.
+//        4. Трансформация модели. После реализации всего конвейера, нужно добавить в
+//        меню настройку модели. Необходима возможность масштабировать ее вдоль
+//        каждой из осей, вокруг каждой из осей поворачивать и перемещать. При сохранении модели (см. работу другого студента) следует выбирать, учитывать
+//        трансформации модели или нет. То есть нужна возможность сохранить как
+//        исходную модель, так и модель после преобразований. Посоветуйтесь с человеком, отвечающим за интерфейс, он может выделить вам место под нужные
+//        кнопки.
 
 
 import com.cgvsu.model.Model;
+import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
 
-import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
 
 public class AffineTransf {
 
     //Перечесисление отвечающее за порядок поворотов в каждой из плоскостей
     private OrderRotation orderRotation = OrderRotation.ZYX;
+
     //Параметры масштабирования
     private float Sx = 1;
     private float Sy = 1;
@@ -25,13 +35,13 @@ public class AffineTransf {
     private float Ty = 0;
     private float Tz = 0;
 
-    private Matrix4f R = new Matrix4f(1, 0, 0, 0,
+    private Matrix4x4 R = new Matrix4x4(1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1);
-    private Matrix4f S;
-    private Matrix4f T;
-    private Matrix4f A = new Matrix4f(1, 0, 0, 0,
+    private Matrix4x4 S;
+    private Matrix4x4 T;
+    private Matrix4x4 A = new Matrix4x4(1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1);
@@ -56,18 +66,18 @@ public class AffineTransf {
 
     private void calculateA() {
         //Матрица поворота задается единичной
-        R = new Matrix4f(1, 0, 0, 0,
+        R = new Matrix4x4(1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1);
 
         //Вычисление матрицы переноса
-        T = new Matrix4f(1, 0, 0, Tx,
+        T = new Matrix4x4(1, 0, 0, Tx,
                 0, 1, 0, Ty,
                 0, 0, 1, Tz,
                 0, 0, 0, 1);
         //Вычисление матрицы масштабирования
-        S = new Matrix4f(Sx, 0, 0, 0,
+        S = new Matrix4x4(Sx, 0, 0, 0,
                 0, Sy, 0, 0,
                 0, 0, Sz, 0,
                 0, 0, 0, 1);
@@ -82,66 +92,66 @@ public class AffineTransf {
         float cosY = (float) Math.cos(Rz * Math.PI / 180);
 
         //Матрицы поворота в каждой из плоскостей
-        Matrix4f Z = new Matrix4f(cosY, sinY, 0, 0,
+        Matrix4x4 Z = new Matrix4x4(cosY, sinY, 0, 0,
                 -sinY, cosY, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1);
 
 
-        Matrix4f Y = new Matrix4f(cosB, 0, sinB, 0,
+        Matrix4x4 Y = new Matrix4x4(cosB, 0, sinB, 0,
                 0, 1, 0, 0,
                 -sinB, 0, cosB, 0,
                 0, 0, 0, 1);
 
-        Matrix4f X = new Matrix4f(1, 0, 0, 0,
+        Matrix4x4 X = new Matrix4x4(1, 0, 0, 0,
                 0, cosA, sinA, 0,
                 0, -sinA, cosA, 0,
                 0, 0, 0, 1);
 
-        //Матрица афинных преобразований принимается равной единице
-        A = new Matrix4f(T);
+        //Матрица аффинных преобразований принимается равной единице
+        A = new Matrix4x4(T);
 
         //Перемножение матриц поворота согласно их порядку
         switch (orderRotation) {
             case ZYX -> {
-                R.mul(X);
-                R.mul(Y);
-                R.mul(Z);
+                R = R.multiply(X);
+                R = R.multiply(Y);
+                R = R.multiply(Z);
             }
             case ZXY -> {
-                R.mul(Y);
-                R.mul(X);
-                R.mul(Z);
+                R = R.multiply(Y);
+                R = R.multiply(X);
+                R = R.multiply(Z);
             }
             case YZX -> {
-                R.mul(X);
-                R.mul(Z);
-                R.mul(Y);
+                R = R.multiply(X);
+                R = R.multiply(Z);
+                R = R.multiply(Y);
             }
             case YXZ -> {
-                R.mul(Z);
-                R.mul(X);
-                R.mul(Y);
+                R = R.multiply(Z);
+                R = R.multiply(X);
+                R = R.multiply(Y);
             }
             case XZY -> {
-                R.mul(Y);
-                R.mul(Z);
-                R.mul(X);
+                R = R.multiply(Y);
+                R = R.multiply(Z);
+                R = R.multiply(X);
             }
             case XYZ -> {
-                R.mul(Z);
-                R.mul(Y);
-                R.mul(X);
+                R = R.multiply(Z);
+                R = R.multiply(Y);
+                R = R.multiply(X);
             }
-            default -> R.mul(1);
+            default -> R = R.multiply(1);
         }
-        //Вычисление матрицы афинных преобразований
-        A.mul(R);
-        A.mul(S);
+        //Вычисление матрицы аффинных преобразований
+        A = A.multiply(R);
+        A = A.multiply(S);
     }
 
     public Vector3D transformVertex(Vector3D v) {
-        return VectorMath.mullMatrix4fOnVector3f(A, v);
+        return VectorMath.mullMatrix4x4OnVector3D(A, v);
     }
 
     public Model transformModel(Model m) {
@@ -156,8 +166,8 @@ public class AffineTransf {
         }
 
         for (Vector3D v : m.normals) {
-            rez.normals.add(VectorMath.mullMatrix4fOnVector3f(R,v));
-            //На преобразование нормалей влимяет только матрица поворота
+            rez.normals.add(VectorMath.mullMatrix4x4OnVector3D(R,v));
+            //На преобразование нормалей влияет только матрица поворота
         }
 
         return rez;
@@ -254,19 +264,19 @@ public class AffineTransf {
         calculateA();
     }
 
-    public Matrix4f getR() {
+    public Matrix4x4 getR() {
         return R;
     }
 
-    public Matrix4f getS() {
+    public Matrix4x4 getS() {
         return S;
     }
 
-    public Matrix4f getT() {
+    public Matrix4x4 getT() {
         return T;
     }
 
-    public Matrix4f getA() {
+    public Matrix4x4 getA() {
         return A;
     }
 }

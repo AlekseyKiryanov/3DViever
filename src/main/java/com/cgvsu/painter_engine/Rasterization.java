@@ -76,11 +76,17 @@ public class Rasterization {
 
     private void paintPoint(int x, int y) {
         float alpha = (float) ((x - x3) * caff4 - (y - y3) * caff5) / caff2;
+
+
         float beta = (float) (x - x3) / caff3 - alpha * caff1;
+
         float gama = 1 - alpha - beta;
 
 
+
+
         float z = (float) alpha * z1 + beta * z2 + gama * z3;
+
         if (x < 0 || y < 0 || x >= width || y >= height || (z > z_boofer[x][y]) == false) {
             return;
         }

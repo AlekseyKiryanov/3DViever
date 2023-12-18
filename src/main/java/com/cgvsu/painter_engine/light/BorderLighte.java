@@ -7,14 +7,14 @@ public class BorderLighte implements Lighter {
     @Override
     public Color setLight(Vector3D light, Color defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
 
-        alpha = Math.min(1, Math.max(alpha, 0));
-        beta = Math.min(1, Math.max(beta, 0));
-        gama = Math.min(1, Math.max(gama, 0));
+        alpha = Math.min(1, Math.max(  Math.abs(alpha), 0));
+        beta = Math.min(1, Math.max(Math.abs(beta), 0));
+        gama = Math.min(1, Math.max(Math.abs(gama), 0));
 
         Vector3D N = new Vector3D(0, 0, 0);
-        N.addThis(n1.multiply(alpha));
-        N.addThis(n2.multiply(beta));
-        N.addThis(n3.multiply(gama));
+        N.addThis(n1.multiply(  Math.abs(alpha)));
+        N.addThis(n2.multiply(Math.abs(beta)));
+        N.addThis(n3.multiply(Math.abs(gama)));
 
         N = N.normalize();
         N.multiplyThis(-1);
@@ -25,10 +25,10 @@ public class BorderLighte implements Lighter {
         Vector3D specColor = new Vector3D(1, 1, 1);
 
 
-        float specPower = 15.0F;
+        float specPower = 8.0F;
         specColor.multiplyThis((float) Math.pow(Float.max(L.dotProduct(R), 0), specPower));
         float rimPower = 8.0F;
-        float biass = 0.05F;
+        float biass = 0.2F;
         Vector3D rimColor = new Vector3D(1, 1, 1);
         rimColor.multiplyThis((float) Math.pow(1 + biass - Float.max(N.dotProduct(V), 0), rimPower));
         specColor.addThis(rimColor);

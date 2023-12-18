@@ -10,7 +10,7 @@ public class Normalization {
 
     private final Model working_model;
 
-    private final float LEVEL_OF_EDGE_SMOOTHING = 0.8F;
+    private final float LEVEL_OF_EDGE_SMOOTHING = 0.5F;
 
     public Normalization(Model working_model) {
         this.working_model = working_model;
