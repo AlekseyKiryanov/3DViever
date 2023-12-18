@@ -10,6 +10,8 @@ public class Normalization {
 
     private final Model working_model;
 
+    private final float LEVEL_OF_EDGE_SMOOTHING = 0.5F;
+
     public Normalization(Model working_model) {
         this.working_model = working_model;
     }
@@ -35,13 +37,17 @@ public class Normalization {
                 Vector3D point = working_model.vertices.get(working_model.polygons.get(i).getVertexIndices().get(j));
 
                 Vector3D normal = vec1.subtract(point).crossProduct(vec2.subtract(point)).normalize();
+
                 new_normals.add(ans_model.normals.size());
                 ans_model.normals.add(normal);
+
+
                 sumNormals = sumNormals.add(normal);
 
                 vertexes_at_polygons.put(working_model.polygons.get(i).getVertexIndices().get(j), i);
 
             }
+
 
             ans_model.polygons.get(i).setNormalIndices(new_normals);
             sumNormals = sumNormals.divide(l);
@@ -51,6 +57,9 @@ public class Normalization {
         }
 
         for (int i = 0; i < p; i++) {
+
+
+
             int l = ans_model.polygons.get(i).getVertexIndices().size();
             for (int j = 0; j < l; j++) {
 
@@ -60,14 +69,15 @@ public class Normalization {
                 int k = 0;
                 for (int n = 0; n < m; n++) {
 
-                    if (ans_model.polygons.get(i).getNormal().dotProduct(ans_model.polygons.get(other_polygons.get(n)).getNormal()) > 0.88) {
+                    if (ans_model.polygons.get(i).getNormal().dotProduct(ans_model.polygons.get(other_polygons.get(n)).getNormal()) > LEVEL_OF_EDGE_SMOOTHING) {
+                        //Усредняются только те нормали, между которыми угол достаточно острый.
                         sumNormals = sumNormals.add(ans_model.polygons.get(other_polygons.get(n)).getNormal());
                         k++;
                     }
                 }
 
                 if (k >= 1) {
-                    ans_model.normals.set(ans_model.polygons.get(i).getNormalIndices().get(j), sumNormals.divide(k).normalize());
+                    ans_model.normals.set(   ans_model.polygons.get(i).getNormalIndices().get(j) , sumNormals.divide(k).normalize());
                 }
 
             }

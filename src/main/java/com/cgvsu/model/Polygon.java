@@ -38,8 +38,8 @@ public class Polygon {
     }
 
     public void setNormalIndices(ArrayList<Integer> normalIndices) {
-        assert normalIndices.size() >= 3;
-        this.normalIndices = normalIndices;
+       //assert normalIndices.size() >= 3;
+       this.normalIndices = normalIndices;
     }
 
     public Vector3D getNormal() {

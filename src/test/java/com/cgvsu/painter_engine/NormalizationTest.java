@@ -15,13 +15,13 @@ class NormalizationTest {
 
     @Test
     void cube() throws IOException {
-        Path fileName = Path.of("primitives\\cube.obj");
+        Path fileName = Path.of("primitives\\cube");
         String fileContent = Files.readString(fileName);
         Model model = ObjReader.read(fileContent);
 
         Model new_model = new Normalization(model).recalceNormales();
 
-        ObjWriter.write("primitives\\test.obj", new_model);
+        ObjWriter.write("D:\\gps3.obj", new_model);
 
     }
 

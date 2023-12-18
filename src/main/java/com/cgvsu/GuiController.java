@@ -1,9 +1,12 @@
 package com.cgvsu;
 
 import com.cgvsu.affinetransf.AffineTransf;
+import com.cgvsu.logger.LoggerSingleton;
+import com.cgvsu.logger.SimpleConsoleLogger;
 import com.cgvsu.objwriter.ObjWriter;
 import com.cgvsu.painter_engine.Normalization;
 import com.cgvsu.painter_engine.Triangulation;
+import com.cgvsu.painter_engine.light.*;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
@@ -13,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -29,10 +33,12 @@ import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
 
 import static com.cgvsu.render_engine.RenderEngine.render;
+
 import javafx.animation.AnimationTimer;
 
 public class GuiController {
 
+    final private int RELOAD_MILISECONDS = 50; //Время перерисовки кадра.
 
     final private float TRANSLATION = 0.5F;
     @FXML
@@ -74,6 +80,11 @@ public class GuiController {
     private Model normal_model = null;
     private Model trianguled_model = null;
 
+    private Lighter lighte = new PrimeLighte();
+
+    private final SimpleConsoleLogger log = LoggerSingleton.getInstance();
+
+
     private Camera camera = new Camera(
             new Vector3D(0, 00, 100),
             new Vector3D(0, 0, 0),
@@ -81,55 +92,58 @@ public class GuiController {
 
     private Timeline timeline;
 
-@FXML
-private void initialize() {
-    anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-    anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+    @FXML
+    private void initialize() {
+        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
+        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
-    if (canvas != null) {
-        canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
-        canvas.setOnMouseDragged(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
-        canvas.setOnScroll(event2 -> {
-            camera.mouseDeltaY = event2.getDeltaY();
-            camera.handleMouseInput(event2.getX(), event2.getY(), false, false);
-        });
-        // Установка обработчиков событий для кнопок
-        rotateButton.setOnAction(e ->{startRotationAnimation();});
+        if (canvas != null) {
+            canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
+            canvas.setOnMouseDragged(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
+            canvas.setOnScroll(event2 -> {
+                camera.mouseDeltaY = event2.getDeltaY();
+                camera.handleMouseInput(event2.getX(), event2.getY(), false, false);
+            });
+            // Установка обработчиков событий для кнопок
+            rotateButton.setOnAction(e -> {
+                startRotationAnimation();
+            });
 
-        affButton.setOnAction(e -> {
-            applyTransformations(
-                    parseTextField(SxField, false), parseTextField(SyField, false), parseTextField(SzField, false),
-                    parseTextField(RxField, false), parseTextField(RyField, false), parseTextField(RzField, false),
-                    parseTextField(TxField, true), parseTextField(TyField, true), parseTextField(TzField, true)
-            );
+            affButton.setOnAction(e -> {
+                applyTransformations(
+                        parseTextField(SxField, false), parseTextField(SyField, false), parseTextField(SzField, false),
+                        parseTextField(RxField, false), parseTextField(RyField, false), parseTextField(RzField, false),
+                        parseTextField(TxField, true), parseTextField(TyField, true), parseTextField(TzField, true)
+                );
+            });
+            affButtonSave.setOnAction(e -> {
+                saveModelInFile();
+            });
+            returnButton.setOnAction(e -> {
+                returnOriginalModel();
+            });
+        }
+
+        timeline = new Timeline();
+        timeline.setCycleCount(Animation.INDEFINITE);
+
+        KeyFrame frame = new KeyFrame(Duration.millis(RELOAD_MILISECONDS), event -> {
+            double width = canvas.getWidth();
+            double height = canvas.getHeight();
+
+            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+            camera.setAspectRatio((float) (width / height));
+
+            if (default_model != null) {
+                render(lighte, canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height, mainColor.getValue());
+                log.setSameLevel(System.Logger.Level.OFF);
+            }
         });
-        affButtonSave.setOnAction(e -> {saveModelInFile();});
-        returnButton.setOnAction(e -> {returnOriginalModel();});
+
+        timeline.getKeyFrames().add(frame);
+        timeline.play();
     }
 
-    timeline = new Timeline();
-    timeline.setCycleCount(Animation.INDEFINITE);
-
-    KeyFrame frame = new KeyFrame(Duration.millis(34), event -> {
-        // Работа в 30 ФПС
-        double width = canvas.getWidth();
-        double height = canvas.getHeight();
-
-        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-        camera.setAspectRatio((float) (width / height));
-
-        if (default_model != null) {
-            if (is_triangle.isSelected()) {
-                render(canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height);
-            } else {
-                render(canvas.getGraphicsContext2D(), camera, default_model, (int) width, (int) height);
-            }
-        }
-    });
-
-    timeline.getKeyFrames().add(frame);
-    timeline.play();
-}
     private void applyTransformations(
             float scaleX, float scaleY, float scaleZ,
             float rotateX, float rotateY, float rotateZ,
@@ -147,21 +161,21 @@ private void initialize() {
         affineTransf.setTz(translateZ);
 
         // Применение трансформаций к модели
-        if (is_triangle.isSelected()){
+      //  if (is_triangle.isSelected()) {
             trianguled_model = affineTransf.transformModel(trianguled_model);
-        }
-        default_model = affineTransf.transformModel(default_model);
+      //  }
+         default_model = affineTransf.transformModel(default_model);
 
     }
 
-    private void saveModelInFile(){
-        if (is_triangle.isSelected()){
+    private void saveModelInFile() {
+        if (is_triangle.isSelected()) {
             saveModel(trianguled_model);
-        }
-        else{
+        } else {
             saveModel(default_model);
         }
     }
+
     private void saveModel(Model model) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Model");
@@ -181,15 +195,14 @@ private void initialize() {
         }
     }
 
-    private void returnOriginalModel(){
-        if (is_triangle.isSelected()){
+    private void returnOriginalModel() {
+        if (is_triangle.isSelected()) {
             default_model = original_model;
             normal_model = new Normalization(default_model).recalceNormales();
             trianguled_model = new Triangulation(normal_model).triangulate();
             is_triangle.setSelected(false);
 
-        }
-        else{
+        } else {
             default_model = original_model;
         }
     }
@@ -198,7 +211,7 @@ private void initialize() {
         try {
             return Float.parseFloat(textField.getText());
         } catch (NumberFormatException e) {
-            if (!isTranslate){
+            if (!isTranslate) {
                 return 1;
             }
             return 0;
@@ -206,7 +219,7 @@ private void initialize() {
     }
 
 
-    private void loadModel(Path fileName){
+    private void loadModel(Path fileName) {
         try {
             String fileContent = Files.readString(fileName);
             original_model = ObjReader.read(fileContent);
@@ -239,6 +252,7 @@ private void initialize() {
                         float rotateAngle = (float) (elapsedSeconds * rotateSpeed);
 
                         applyTransformations(1, 1, 1, 0, rotateAngle, 0, 0, 0, 0);
+
                     }
                     lastTime = now;
                 } else {
@@ -253,7 +267,6 @@ private void initialize() {
             rotationTimer.stop();
         }
     }
-
 
 
     @FXML
@@ -318,5 +331,33 @@ private void initialize() {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3D(0, -TRANSLATION, 0));
+    }
+
+    @FXML
+    private ColorPicker mainColor;
+
+    @FXML
+    private void setPrimeLighte() {
+        lighte = new PrimeLighte();
+    }
+
+    @FXML
+    private void setPoligonLighte() {
+        lighte = new PoligonLighte();
+    }
+
+    @FXML
+    private void setBlikeLighte() {
+        lighte = new BlikeLighte();
+    }
+
+    @FXML
+    private void setBorderLighte() {
+        lighte = new BorderLighte();
+    }
+
+    @FXML
+    public void activeTraceLog(ActionEvent actionEvent) {
+        log.setSameLevel(System.Logger.Level.TRACE);
     }
 }

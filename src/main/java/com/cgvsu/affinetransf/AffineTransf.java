@@ -9,6 +9,7 @@ package com.cgvsu.affinetransf;
 //        исходную модель, так и модель после преобразований. Посоветуйтесь с человеком, отвечающим за интерфейс, он может выделить вам место под нужные
 //        кнопки.
 
+
 import com.cgvsu.model.Model;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
@@ -17,8 +18,9 @@ import java.util.ArrayList;
 
 public class AffineTransf {
 
-    //Перечисление отвечающее за порядок поворотов в каждой из плоскостей
-    private OrderRotation or = OrderRotation.ZYX;
+    //Перечесисление отвечающее за порядок поворотов в каждой из плоскостей
+    private OrderRotation orderRotation = OrderRotation.ZYX;
+
     //Параметры масштабирования
     private float Sx = 1;
     private float Sy = 1;
@@ -47,8 +49,8 @@ public class AffineTransf {
     public AffineTransf() {
     }
 
-    public AffineTransf(OrderRotation or, float sx, float sy, float sz, float rx, float ry, float rz, float tx, float ty, float tz) {
-        this.or = or;
+    public AffineTransf(OrderRotation orderRotation, float sx, float sy, float sz, float rx, float ry, float rz, float tx, float ty, float tz) {
+        this.orderRotation = orderRotation;
         Sx = sx;
         Sy = sy;
         Sz = sz;
@@ -110,7 +112,7 @@ public class AffineTransf {
         A = new Matrix4x4(T);
 
         //Перемножение матриц поворота согласно их порядку
-        switch (or) {
+        switch (orderRotation) {
             case ZYX -> {
                 R = R.multiply(X);
                 R = R.multiply(Y);
@@ -172,12 +174,12 @@ public class AffineTransf {
     }
 
 
-    public OrderRotation getOr() {
-        return or;
+    public OrderRotation getOrderRotation() {
+        return orderRotation;
     }
 
-    public void setOr(OrderRotation or) {
-        this.or = or;
+    public void setOrderRotation(OrderRotation orderRotation) {
+        this.orderRotation = orderRotation;
         calculateA();
     }
 

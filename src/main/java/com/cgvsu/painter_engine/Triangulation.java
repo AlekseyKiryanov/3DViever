@@ -12,7 +12,7 @@ import java.util.List;
 public class Triangulation {
     private final Model working_model;
 
-    private final double eps = 0e-4;
+    private final double eps = 0e-5;
     private Model ans_model;
 
     public Triangulation(Model working_model) {
@@ -85,7 +85,7 @@ public class Triangulation {
         int index = 0;
 
 
-        while (points.size() > 2) {
+        while (points.size() > 3) {
 
             Vector2D p1 = points.get((index) % points.size());
             Vector2D p2 = points.get((index + 1) % points.size());
@@ -109,8 +109,9 @@ public class Triangulation {
                     rez.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
                 }
 
+
+                indexes.remove((index + 1) % points.size());
                 points.remove(p2);
-                indexes.remove(indexes.get((index + 1) % points.size()));
 
                 ans_model.polygons.add(rez);
 
@@ -123,8 +124,9 @@ public class Triangulation {
                     rez.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
                 }
 
-                points.remove(p2);
+
                 indexes.remove((index + 1) % points.size());
+                points.remove(p2);
 
                 ans_model.polygons.add(rez);
 
@@ -132,10 +134,26 @@ public class Triangulation {
                 index++;
             }
 
-            if (index > l * l * l) {
-                throw new BadPoligonException("неверный порядок обхода (перекрест ребер)", p.getLine());
+            if (index > l * l * l * l) {
+                break;
+                //throw new BadPoligonException("неверный порядок обхода (перекрест ребер)", p.getLine());
             }
 
+        }
+
+        if (points.size() == 3) {
+
+
+            index = 2;
+
+            Polygon rez = new Polygon();
+            rez.setNormalIndices(new ArrayList<>(Arrays.asList(p.getNormalIndices().get(indexes.get((index) % points.size())), p.getNormalIndices().get(indexes.get((index + 1) % points.size())), p.getNormalIndices().get(indexes.get((index + 2) % points.size())))));
+            rez.setVertexIndices(new ArrayList<>(Arrays.asList(p.getVertexIndices().get(indexes.get((index) % points.size())), p.getVertexIndices().get(indexes.get((index + 1) % points.size())), p.getVertexIndices().get(indexes.get((index + 2) % points.size())))));
+            if (!p.getTextureVertexIndices().isEmpty()) {
+                rez.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
+            }
+
+            ans_model.polygons.add(rez);
         }
 
         points.clear();
@@ -153,8 +171,9 @@ public class Triangulation {
     }
 
     private boolean validTriangle(Triangle triangle, Vector2D p1, Vector2D p2, Vector2D p3, List<Vector2D> points) {
+        if (points.size() == 3) return true;
         for (Vector2D p : points) {
-            if (p.subtract(p1).length() < eps && p.subtract(p2).length() < eps && p.subtract(p3).length() < eps && triangle.contains(p)) {
+            if (!p.equals(p1) && !p.equals(p2) && !p.equals(p3) && triangle.contains(p)) {
                 return false;
             }
         }

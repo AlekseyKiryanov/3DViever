@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckMenuItem?>
@@ -14,113 +15,150 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.paint.Color?>
 
-<AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
+<AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.cgvsu.GuiController">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#onOpenModelMenuItemClick" text="Load Model">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
-            <SeparatorMenuItem />
+            <SeparatorMenuItem/>
             <MenuItem mnemonicParsing="false" onAction="#loadCube" text="Open cube">
                 <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="DIGIT1" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="DOWN" code="DIGIT1" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#loadCilynder" text="Open cylinder">
                 <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="DIGIT2" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="DOWN" code="DIGIT2" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#loadCone" text="Open cone">
                 <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="DIGIT3" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="DOWN" code="DIGIT3" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#loadTorus" text="Open torus">
                 <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="DIGIT4" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="DOWN" code="DIGIT4" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Setting">
             <CheckMenuItem fx:id="is_triangle" mnemonicParsing="false" text="Triangulate">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </CheckMenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#activeTraceLog" text="PrintLog">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="UP" shortcut="UP"/>
+                </accelerator>
+            </MenuItem>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Освещение">
+            <MenuItem mnemonicParsing="false" onAction="#setPrimeLighte" text="Простое освещение">
+
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#setPoligonLighte" text="Полигональное">
+
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#setBlikeLighte" text="Бликовое">
+
+            </MenuItem>
+
+            <MenuItem mnemonicParsing="false" onAction="#setBorderLighte" text="Краевое">
+
+            </MenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Camera Options">
             <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#handleCameraBackward" text="Backward">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#handleCameraLeft" text="Left">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="LEFT" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="LEFT" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#handleCameraRight" text="Right">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="RIGHT" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="RIGHT" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#handleCameraUp" text="Up">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="W" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="W" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#handleCameraDown" text="Down">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
         </Menu>
+
+
+
+
     </MenuBar>
 
-    <Canvas fx:id="canvas" height="870" layoutY="38.0" width="1600" AnchorPane.topAnchor="38.0" />
-   <GridPane layoutX="1186.0" layoutY="13.0">
-     <columnConstraints>
-       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-     </columnConstraints>
-     <rowConstraints>
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-     </rowConstraints>
-      <children>
-         <Label text="Масштабирование:" GridPane.rowIndex="1" />
-         <Label text="Поворот:" GridPane.rowIndex="2" />
-         <Label text="Перенос:" GridPane.rowIndex="3" />
-         <TextField fx:id="SzField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-         <TextField fx:id="RzField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-         <TextField fx:id="TzField" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-         <TextField fx:id="SyField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-         <TextField fx:id="SxField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-         <TextField fx:id="RyField" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-         <TextField fx:id="RxField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         <TextField fx:id="TyField" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-         <TextField fx:id="TxField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-         <Label text="По X:" GridPane.columnIndex="1" />
-         <Label text="По Y:" GridPane.columnIndex="2" />
-         <Label text="По Z:" GridPane.columnIndex="3" />
-      </children>
-   </GridPane>
-   <Button fx:id="rotateButton" layoutX="210.0" layoutY="2.0" mnemonicParsing="false" text="Auto-rotate ON/OFF" />
-   <Button fx:id="affButtonSave" layoutX="1323.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" text="Сохранить модель" />
-   <Button fx:id="affButton" layoutX="1178.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="148.0" text="Сохранить изменения" />
-   <Button fx:id="returnButton" layoutX="1441.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="148.0" text="Вернуть исходный вид" />
+
+    <Canvas fx:id="canvas" height="870" layoutY="38.0" width="1600" AnchorPane.topAnchor="38.0"/>
+    <GridPane layoutX="1186.0" layoutY="13.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <children>
+            <Label text="Масштабирование:" GridPane.rowIndex="1"/>
+            <Label text="Поворот:" GridPane.rowIndex="2"/>
+            <Label text="Перенос:" GridPane.rowIndex="3"/>
+            <TextField fx:id="SzField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+            <TextField fx:id="RzField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+            <TextField fx:id="TzField" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+            <TextField fx:id="SyField" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <TextField fx:id="SxField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="RyField" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <TextField fx:id="RxField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="TyField" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <TextField fx:id="TxField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Label text="По X:" GridPane.columnIndex="1"/>
+            <Label text="По Y:" GridPane.columnIndex="2"/>
+            <Label text="По Z:" GridPane.columnIndex="3"/>
+        </children>
+    </GridPane>
+    <Button fx:id="rotateButton" layoutX="210.0" layoutY="2.0" mnemonicParsing="false" text="Auto-rotate ON/OFF"/>
+    <Button fx:id="affButtonSave" layoutX="1323.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0"
+            prefWidth="118.0" text="Сохранить модель"/>
+    <Button fx:id="affButton" layoutX="1178.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0"
+            prefWidth="148.0" text="Сохранить изменения"/>
+    <Button fx:id="returnButton" layoutX="1441.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0"
+            prefWidth="148.0" text="Вернуть исходный вид"/>
+    <ColorPicker fx:id="mainColor" layoutY="30.0">
+        <value>
+            <Color red="0.03125" green="0.36666667461395264" blue="0.75"/>
+        </value>
+    </ColorPicker>
+
 
 </AnchorPane>

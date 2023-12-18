@@ -1,4 +1,5 @@
 package com.cgvsu.render_engine;
+
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
 
@@ -64,6 +65,7 @@ public class Camera {
     public double mouseDeltaY;
 
     public void handleMouseInput(double x, double y, boolean isPrimaryButtonDown, boolean isSecondaryButtonDown) {
+
         if (isPrimaryButtonDown) {
     // Вращение камеры вокруг объекта при зажатой левой кнопке мыши
             rotateCamera((float) (x - mousePosX), (float) (y - mousePosY));
@@ -80,6 +82,7 @@ public class Camera {
             mouseDeltaY = 0;
         }
 
+
         mousePosX = x;
         mousePosY = y;
     }
@@ -95,6 +98,7 @@ public class Camera {
 
         position = multiplyMatrix4ByVector3(rotationMatrix, position);
     }
+
     private void rotateCamera(float dx, float dy, float dz) {
         float rotationX = -dy * 0.2f;
         float rotationY = -dx * 0.2f;
