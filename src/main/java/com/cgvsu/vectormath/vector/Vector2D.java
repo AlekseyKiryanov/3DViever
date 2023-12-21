@@ -25,6 +25,11 @@ public class Vector2D{
         return new Vector2D(this.x + other.x, this.y + other.y);
     }
 
+    public final void addThis(Vector2D other1) {
+        this.x += other1.x;
+        this.y += other1.y;
+    }
+
     // Вычитание векторов
     public Vector2D subtract(Vector2D other) {
         return new Vector2D(this.x - other.x, this.y - other.y);

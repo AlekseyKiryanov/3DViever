@@ -5,11 +5,8 @@ import javafx.scene.paint.Color;
 
 public class BlikeLighte implements Lighter {
     @Override
-    public Color setLight(Vector3D light, Color defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
+    public Color setLight(Vector3D light, Vector3D defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
 
-        alpha = Math.min(1, Math.max(alpha, 0));
-        beta = Math.min(1, Math.max(beta, 0));
-        gama = Math.min(1, Math.max(gama, 0));
 
         Vector3D N = new Vector3D(0, 0, 0);
         N.addThis(n1.multiply(alpha));
@@ -41,6 +38,6 @@ public class BlikeLighte implements Lighter {
 
 
 
-        return Color.color(Math.min(1, Math.max(specColor.get(0) + defColor.getRed()*m, 0)), Math.min(1, Math.max(specColor.get(1)+ defColor.getGreen()*m, 0)), Math.min(1, Math.max(specColor.get(2)+ defColor.getBlue()*m, 0))); //diffColor.get(0), diffColor.get(1), diffColor.get(2));
+        return Color.color(Math.min(1, Math.max(specColor.get(0) + defColor.get(0)*m, 0)), Math.min(1, Math.max(specColor.get(1)+ defColor.get(1)*m, 0)), Math.min(1, Math.max(specColor.get(2)+ defColor.get(2)*m, 0))); //diffColor.get(0), diffColor.get(1), diffColor.get(2));
     }
 }
