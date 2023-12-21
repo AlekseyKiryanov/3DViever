@@ -262,12 +262,5 @@ public class Rasterization {
         }
     }
 
-    public void paintTriangle(TriangleForPainting triangleForPainting) {
-    }
 
-
-
-    //  public void paintTriangleTexture(TriangleTextureForPainting triangleTextureForPainting) {
-
-  //  }
 }
