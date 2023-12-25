@@ -70,12 +70,6 @@
             <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
-         <dependency>
-            <groupId>org.clojars.drenda81</groupId>
-            <artifactId>javafx-dialogs-0.0.4</artifactId>
-            <version>0.0.4</version>
-        </dependency>
-
     </dependencies>
 
     <build>
