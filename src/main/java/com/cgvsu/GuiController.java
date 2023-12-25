@@ -1,6 +1,6 @@
 package com.cgvsu;
 
-import com.cgvsu.affinetransf.AffineTransf;
+import com.cgvsu.affine_transform.AffineTransform;
 import com.cgvsu.logger.LoggerSingleton;
 import com.cgvsu.logger.SimpleConsoleLogger;
 import com.cgvsu.objwriter.ObjWriter;
@@ -38,7 +38,7 @@ import javafx.animation.AnimationTimer;
 
 public class GuiController {
 
-    final private int RELOAD_MILISECONDS = 50; //Время перерисовки кадра.
+    final private int RELOAD_MILLISECONDS = 50; //Время перерисовки кадра.
 
     final private float TRANSLATION = 0.5F;
     @FXML
@@ -73,7 +73,7 @@ public class GuiController {
     private TextField TyField;
     @FXML
     private TextField TzField;
-    private AffineTransf affineTransf = new AffineTransf();
+    private AffineTransform affineTransform = new AffineTransform();
     private boolean isAutoRotate = false;
     private Model default_model = null;
     private Model original_model = null;
@@ -127,7 +127,7 @@ public class GuiController {
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
-        KeyFrame frame = new KeyFrame(Duration.millis(RELOAD_MILISECONDS), event -> {
+        KeyFrame frame = new KeyFrame(Duration.millis(RELOAD_MILLISECONDS), event -> {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
@@ -150,30 +150,23 @@ public class GuiController {
             float translateX, float translateY, float translateZ) {
 
         // Установка параметров трансформаций
-        affineTransf.setSx(scaleX);
-        affineTransf.setSy(scaleY);
-        affineTransf.setSz(scaleZ);
-        affineTransf.setRx(rotateX);
-        affineTransf.setRy(rotateY);
-        affineTransf.setRz(rotateZ);
-        affineTransf.setTx(translateX);
-        affineTransf.setTy(translateY);
-        affineTransf.setTz(translateZ);
+        affineTransform.setScaleX(scaleX);
+        affineTransform.setScaleY(scaleY);
+        affineTransform.setScaleZ(scaleZ);
+        affineTransform.setRotationX(rotateX);
+        affineTransform.setRotationY(rotateY);
+        affineTransform.setRotationZ(rotateZ);
+        affineTransform.setTranslationX(translateX);
+        affineTransform.setTranslationY(translateY);
+        affineTransform.setTranslationZ(translateZ);
 
         // Применение трансформаций к модели
-      //  if (is_triangle.isSelected()) {
-            trianguled_model = affineTransf.transformModel(trianguled_model);
-      //  }
-         default_model = affineTransf.transformModel(default_model);
-
+        trianguled_model = affineTransform.transformModel(trianguled_model);
+         default_model = affineTransform.transformModel(default_model);
     }
 
     private void saveModelInFile() {
-        if (is_triangle.isSelected()) {
             saveModel(trianguled_model);
-        } else {
-            saveModel(default_model);
-        }
     }
 
     private void saveModel(Model model) {
@@ -186,7 +179,6 @@ public class GuiController {
         if (file != null) {
             String chosenFilePath = file.getAbsolutePath();
 
-            // Проверка наличия расширения .obj
             if (!chosenFilePath.toLowerCase().endsWith(".obj")) {
                 chosenFilePath += ".obj";
             }
@@ -196,15 +188,10 @@ public class GuiController {
     }
 
     private void returnOriginalModel() {
-        if (is_triangle.isSelected()) {
             default_model = original_model;
             normal_model = new Normalization(default_model).recalceNormales();
             trianguled_model = new Triangulation(normal_model).triangulate();
             is_triangle.setSelected(false);
-
-        } else {
-            default_model = original_model;
-        }
     }
 
     private float parseTextField(TextField textField, boolean isTranslate) {
@@ -217,7 +204,6 @@ public class GuiController {
             return 0;
         }
     }
-
 
     private void loadModel(Path fileName) {
         try {
@@ -267,7 +253,6 @@ public class GuiController {
             rotationTimer.stop();
         }
     }
-
 
     @FXML
     private void onOpenModelMenuItemClick() {

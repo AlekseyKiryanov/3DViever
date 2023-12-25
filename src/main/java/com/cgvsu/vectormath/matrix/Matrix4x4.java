@@ -239,6 +239,29 @@ public class Matrix4x4{
         final float w = (float) ((vertex.get(0) * matrix.getElem(0,3)) + (vertex.get(1) * matrix.getElem(1, 3)) + (vertex.get(2) * matrix.getElem(2, 3)) + matrix.getElem(3, 3));
         return new Vector3D(x / w, y / w, z / w);
     }
+    public static Vector3D multMatrix4x4OnVector3D(Matrix4x4 m, Vector3D v) {
+        return new Vector3D(m.getElem(0, 0) * v.get(0) + m.getElem(0, 1) * v.get(1) + m.getElem(0, 2) * v.get(2) + m.getElem(0, 3),
+                m.getElem(1, 0) * v.get(0) + m.getElem(1, 1) * v.get(1) + m.getElem(1, 2) * v.get(2) + m.getElem(1, 3),
+                m.getElem(2, 0) * v.get(0) + m.getElem(2, 1) * v.get(1) + m.getElem(2, 2) * v.get(2) + m.getElem(2, 3));
+    }
+
+    public static Matrix4x4 perspective(
+            final float fov,
+            final float aspectRatio,
+            final float nearPlane,
+            final float farPlane) {
+        float[][] matrix = new float[4][4];
+
+        float tangentMinusOnDegree = (float) (1.0F / (Math.tan(fov * 0.5F)));
+
+        matrix[0][0] = tangentMinusOnDegree / aspectRatio;
+        matrix[1][1] = tangentMinusOnDegree;
+        matrix[2][2] = (farPlane + nearPlane) / (farPlane - nearPlane);
+        matrix[2][3] = 1.0F;
+        matrix[3][2] = 2 * (nearPlane * farPlane) / (nearPlane - farPlane);
+
+        return new Matrix4x4(matrix);
+    }
 
 
     @Override
