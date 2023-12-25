@@ -27,6 +27,15 @@
                     <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#onOpenTextureMenuItemClick" text="Выбрать текстуру">
+
+            </MenuItem>
+
+            <MenuItem mnemonicParsing="false" onAction="#resetTextureMenuItemClick" text="Убрать/ показать текстуру">
+
+            </MenuItem>
+
+
             <SeparatorMenuItem/>
             <MenuItem mnemonicParsing="false" onAction="#loadCube" text="Open cube">
                 <accelerator>
@@ -156,7 +165,7 @@
             prefWidth="148.0" text="Вернуть исходный вид"/>
     <ColorPicker fx:id="mainColor" layoutY="30.0">
         <value>
-            <Color red="0.03125" green="0.36666667461395264" blue="0.75"/>
+            <Color red="1" green="1" blue="1"/>
         </value>
     </ColorPicker>
 

@@ -1,13 +1,14 @@
 package com.cgvsu;
 
 import com.cgvsu.affinetransf.AffineTransf;
-import com.cgvsu.logger.LoggerSingleton;
 import com.cgvsu.logger.SimpleConsoleLogger;
 import com.cgvsu.objwriter.ObjWriter;
 import com.cgvsu.painter_engine.Normalization;
+import com.cgvsu.painter_engine.Texture;
 import com.cgvsu.painter_engine.Triangulation;
 import com.cgvsu.painter_engine.light.*;
 import com.cgvsu.vectormath.vector.Vector3D;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -19,6 +20,7 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
@@ -27,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
+import java.util.List;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
@@ -38,7 +41,7 @@ import javafx.animation.AnimationTimer;
 
 public class GuiController {
 
-    final private int RELOAD_MILISECONDS = 50; //Время перерисовки кадра.
+    final private int RELOAD_MILISECONDS = 00100; //Время перерисовки кадра.
 
     final private float TRANSLATION = 0.5F;
     @FXML
@@ -82,7 +85,9 @@ public class GuiController {
 
     private Lighter lighte = new PrimeLighte();
 
-    private final SimpleConsoleLogger log = LoggerSingleton.getInstance();
+    private final SimpleConsoleLogger log = SimpleConsoleLogger.getInstance();
+
+    private final Texture texture = Texture.getInstance();
 
 
     private Camera camera = new Camera(
@@ -94,6 +99,15 @@ public class GuiController {
 
     @FXML
     private void initialize() {
+
+       mainColor.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                texture.setDefaultColor(mainColor.getValue());
+            }
+        });
+
+
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
@@ -135,7 +149,7 @@ public class GuiController {
             camera.setAspectRatio((float) (width / height));
 
             if (default_model != null) {
-                render(lighte, canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height, mainColor.getValue());
+                render(lighte, canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height);
                 log.setSameLevel(System.Logger.Level.OFF);
             }
         });
@@ -283,6 +297,24 @@ public class GuiController {
         loadModel(Path.of(file.getAbsolutePath()));
     }
 
+    @FXML
+    private void onOpenTextureMenuItemClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Изображение", List.of("*.png","*.bmp","*.jpg","*.jpeg")));
+        fileChooser.setTitle("Выбрать текстуру");
+
+        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        texture.setTexture(file);
+    }
+
+    @FXML
+    private void resetTextureMenuItemClick() {
+        texture.reverseTexture();
+    }
     @FXML
     private void loadCube() {
         loadModel(Path.of("primitives\\cube.obj"));

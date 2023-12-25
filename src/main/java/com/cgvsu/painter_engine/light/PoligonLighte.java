@@ -5,11 +5,7 @@ import javafx.scene.paint.Color;
 
 public class PoligonLighte implements Lighter{
     @Override
-    public Color setLight(Vector3D light, Color defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
-
-        alpha = Math.min(1, Math.max(alpha, 0));
-        beta = Math.min(1, Math.max(beta, 0));
-        gama = Math.min(1, Math.max(gama, 0));
+    public Color setLight(Vector3D light, Vector3D defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
 
         Vector3D N = new Vector3D(0, 0, 0);
         N.addThis(n1);
@@ -23,6 +19,6 @@ public class PoligonLighte implements Lighter{
         float m = (1 - k) + k * l;
 
 
-        return Color.color(defColor.getRed()*m, defColor.getGreen()*m,defColor.getBlue()*m);
+        return Color.color(defColor.get(0)*m, defColor.get(1)*m,defColor.get(2)*m);
     }
 }

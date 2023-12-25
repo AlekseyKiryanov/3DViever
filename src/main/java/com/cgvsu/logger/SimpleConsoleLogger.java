@@ -5,6 +5,18 @@ import java.util.ResourceBundle;
 
 public class SimpleConsoleLogger implements System.Logger {
 
+    private SimpleConsoleLogger() {
+    }
+
+    private static SimpleConsoleLogger INSTANCE;
+
+    public static SimpleConsoleLogger getInstance(){
+        if (INSTANCE == null){
+            INSTANCE = new SimpleConsoleLogger();
+        }
+        return INSTANCE;
+    }
+
     private Level sameLevel = Level.OFF;
 
     public void setSameLevel(Level sameLevel) {

@@ -41,13 +41,16 @@ public class Rasterization {
     private Vector3D n2;
     private Vector3D n3;
 
-    private Lighter lighte;
+    private Vector2D t1;
+    private Vector2D t2;
+    private Vector2D t3;
+
+    private final Lighter lighte;
+
+    private final Texture texture = Texture.getInstance();
 
 
-    private Color C;
-
-    public Rasterization(Lighter lighte, GraphicsContext graphicsContext, int width, int height, Vector3D light, Color C) {
-        this.C = C;
+    public Rasterization(Lighter lighte, GraphicsContext graphicsContext, int width, int height, Vector3D light) {
         this.lighte = lighte;
         this.graphicsContext = graphicsContext;
         this.pixelWriter = graphicsContext.getPixelWriter();
@@ -83,14 +86,37 @@ public class Rasterization {
         float gama = 1 - alpha - beta;
 
 
+        float summa = alpha + beta + gama;
+
+        alpha /= summa;
+        beta /= summa;
+        gama /= summa;
+
+
 
 
         float z = (float) alpha * z1 + beta * z2 + gama * z3;
 
-        if (x < 0 || y < 0 || x >= width || y >= height || (z > z_boofer[x][y]) == false) {
+        if (x < 0 || y < 0 || x >= width || y >= height || !(z > z_boofer[x][y])) {
             return;
         }
         this.z_boofer[x][y] = z;
+
+
+        Vector2D t = new Vector2D(0, 0);
+        t.addThis(t1.multiply(alpha));
+        t.addThis(t2.multiply(beta));
+        t.addThis(t3.multiply(gama));
+
+
+        //t = t.normalize();
+
+        float  u = t.get(0);
+        float v = t.get(1);
+
+
+        Vector3D C = texture.getColor(u , v);
+        //System.out.println(col);
 
         Color color = lighte.setLight(light, C, alpha,beta,gama, n1, n2, n3);
 
@@ -98,7 +124,7 @@ public class Rasterization {
 
     }
 
-    public void paintTriangle(TriangleForPainting triangle) {
+    public void paintTriangleTexture(TriangleTextureForPainting triangle) {
 
         if (triangle.a().get(0) < 0 && triangle.b().get(0) < 0 && triangle.c().get(0) < 0) {
             return;
@@ -121,6 +147,10 @@ public class Rasterization {
         this.z1 = triangle.z1();
         this.z2 = triangle.z2();
         this.z3 = triangle.z3();
+
+        this.t1 = triangle.t1();
+        this.t2 = triangle.t2();
+        this.t3 = triangle.t3();
 
         paintPointsTriangle(Math.round(triangle.a().get(0)), Math.round(triangle.a().get(1)), Math.round(triangle.b().get(0)), Math.round(triangle.b().get(1)), Math.round(triangle.c().get(0)), Math.round(triangle.c().get(1)));
 
