@@ -1,6 +1,7 @@
-package com.cgvsu.painter_engine;
+package com.cgvsu.render_engine.rasterization;
 
 import com.cgvsu.vectormath.vector.Vector3D;
+import javafx.scene.control.Alert;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -11,11 +12,6 @@ import java.nio.file.Files;
 import java.util.Arrays;
 
 public class Texture {
-
-    private Texture() {
-    }
-
-    private static Texture INSTANCE;
 
     private Vector3D defaultColor = new Vector3D(1, 1, 1);
 
@@ -28,13 +24,6 @@ public class Texture {
 
     public void reverseTexture(){
         this.showTexture = !this.showTexture;
-    }
-
-    public static Texture getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Texture();
-        }
-        return INSTANCE;
     }
 
     public void setTexture(File file) {
@@ -62,7 +51,11 @@ public class Texture {
             //System.out.println(Arrays.deepToString(pixels));
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Проблемка");
+            alert.setHeaderText("Эту текстуру невозможно прочитать");
+
+            alert.showAndWait();
         }
     }
 

@@ -1,4 +1,4 @@
-package com.cgvsu.painter_engine;
+package com.cgvsu.editing_model;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -12,30 +12,30 @@ import java.util.List;
 public class Triangulation {
     private final Model working_model;
 
-    private final double eps = 0e-5;
-    private Model ans_model;
+    private final double EPS = 0e-5;
+    private Model ansModel;
 
     public Triangulation(Model working_model) {
         this.working_model = working_model;
     }
 
     public Model triangulate() {
-        ans_model = new Model();
-        ans_model.vertices = new ArrayList<>(working_model.vertices);
-        ans_model.normals = new ArrayList<>(working_model.normals);
-        ans_model.textureVertices = new ArrayList<>(working_model.textureVertices);
+        ansModel = new Model();
+        ansModel.vertices = new ArrayList<>(working_model.vertices);
+        ansModel.normals = new ArrayList<>(working_model.normals);
+        ansModel.textureVertices = new ArrayList<>(working_model.textureVertices);
 
         int p = working_model.polygons.size();
         for (int i = 0; i < p; i++) {
             if (working_model.polygons.get(i).getVertexIndices().size() == 3) {
-                ans_model.polygons.add(working_model.polygons.get(i));
+                ansModel.polygons.add(working_model.polygons.get(i));
             } else {
                 triangulatePolygon(working_model.polygons.get(i));
             }
         }
 
 
-        return ans_model;
+        return ansModel;
     }
 
     private void triangulatePolygon(Polygon p) {
@@ -47,7 +47,7 @@ public class Triangulation {
         for (int i = 1; i < l; i++) {
             delta += Math.abs(working_model.vertices.get(p.getVertexIndices().get(i)).get(0) - working_model.vertices.get(p.getVertexIndices().get(i - 1)).get(0));
         }
-        if (delta > eps) {
+        if (delta > EPS) {
             first_param = 0;
         }
 
@@ -55,7 +55,7 @@ public class Triangulation {
         for (int i = 1; i < l; i++) {
             delta += Math.abs(working_model.vertices.get(p.getVertexIndices().get(i)).get(1) - working_model.vertices.get(p.getVertexIndices().get(i - 1)).get(1));
         }
-        if (delta > eps) {
+        if (delta > EPS) {
             if (first_param == -1) {
                 first_param = 1;
             } else {
@@ -67,7 +67,7 @@ public class Triangulation {
         for (int i = 1; i < l; i++) {
             delta += Math.abs(working_model.vertices.get(p.getVertexIndices().get(i)).get(2) - working_model.vertices.get(p.getVertexIndices().get(i - 1)).get(2));
         }
-        if (delta > eps && second_param != 1) {
+        if (delta > EPS && second_param != 1) {
             second_param = 2;
         }
 
@@ -113,7 +113,7 @@ public class Triangulation {
                 indexes.remove((index + 1) % points.size());
                 points.remove(p2);
 
-                ans_model.polygons.add(rez);
+                ansModel.polygons.add(rez);
 
 
             } else if (clockwise && cross <= 0 && validTriangle(triangle, p1, p2, p3, points)) {
@@ -128,7 +128,7 @@ public class Triangulation {
                 indexes.remove((index + 1) % points.size());
                 points.remove(p2);
 
-                ans_model.polygons.add(rez);
+                ansModel.polygons.add(rez);
 
             } else {
                 index++;
@@ -153,7 +153,7 @@ public class Triangulation {
                 rez.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
             }
 
-            ans_model.polygons.add(rez);
+            ansModel.polygons.add(rez);
         }
 
         points.clear();
@@ -193,7 +193,7 @@ public class Triangulation {
 
         boolean contains(Vector2D P) {
 
-            return Math.abs(this.area() - new Triangle(P, this.A, this.B).area() - new Triangle(P, this.A, this.C).area() - new Triangle(P, this.C, this.B).area()) <= eps;
+            return Math.abs(this.area() - new Triangle(P, this.A, this.B).area() - new Triangle(P, this.A, this.C).area() - new Triangle(P, this.C, this.B).area()) <= EPS;
         }
 
         double area() {

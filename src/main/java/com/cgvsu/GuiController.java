@@ -1,12 +1,12 @@
 package com.cgvsu;
 
 import com.cgvsu.affinetransf.AffineTransf;
+import com.cgvsu.editing_model.Normalization;
+import com.cgvsu.editing_model.Triangulation;
 import com.cgvsu.logger.SimpleConsoleLogger;
 import com.cgvsu.objwriter.ObjWriter;
-import com.cgvsu.painter_engine.Normalization;
-import com.cgvsu.painter_engine.Texture;
-import com.cgvsu.painter_engine.Triangulation;
-import com.cgvsu.painter_engine.light.*;
+import com.cgvsu.render_engine.*;
+import com.cgvsu.render_engine.light.*;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,25 +15,19 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.io.IOException;
 import java.io.File;
 import java.util.List;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
-import com.cgvsu.render_engine.Camera;
 
 import static com.cgvsu.render_engine.RenderEngine.render;
 
@@ -44,8 +38,7 @@ public class GuiController {
     final private int RELOAD_MILISECONDS = 00100; //Время перерисовки кадра.
 
     final private float TRANSLATION = 0.5F;
-    @FXML
-    public CheckMenuItem is_triangle;
+
     @FXML
     AnchorPane anchorPane;
     @FXML
@@ -76,18 +69,14 @@ public class GuiController {
     private TextField TyField;
     @FXML
     private TextField TzField;
-    private AffineTransf affineTransf = new AffineTransf();
+    private final AffineTransf affineTransf = new AffineTransf();
     private boolean isAutoRotate = false;
-    private Model default_model = null;
     private Model original_model = null;
-    private Model normal_model = null;
     private Model trianguled_model = null;
 
-    private Lighter lighte = new PrimeLighte();
+    private Lighte lighte = new PrimeLighte();
 
     private final SimpleConsoleLogger log = SimpleConsoleLogger.getInstance();
-
-    private final Texture texture = Texture.getInstance();
 
 
     private Camera camera = new Camera(
@@ -103,7 +92,16 @@ public class GuiController {
        mainColor.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                texture.setDefaultColor(mainColor.getValue());
+                if (trianguled_model != null){
+                    trianguled_model.getTexture().setDefaultColor(mainColor.getValue());
+                } else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Проблемка");
+                    alert.setHeaderText("Чтобы изменить сначала загрузите модель");
+
+                    alert.showAndWait();
+                }
+
             }
         });
 
@@ -120,15 +118,36 @@ public class GuiController {
             });
             // Установка обработчиков событий для кнопок
             rotateButton.setOnAction(e -> {
-                startRotationAnimation();
+
+                if (trianguled_model != null){
+                    startRotationAnimation();
+                } else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Проблемка");
+                    alert.setHeaderText("Чтобы вращать сначала загрузите модель");
+
+                    alert.showAndWait();
+                }
+
             });
 
             affButton.setOnAction(e -> {
-                applyTransformations(
-                        parseTextField(SxField, false), parseTextField(SyField, false), parseTextField(SzField, false),
-                        parseTextField(RxField, false), parseTextField(RyField, false), parseTextField(RzField, false),
-                        parseTextField(TxField, true), parseTextField(TyField, true), parseTextField(TzField, true)
-                );
+
+                if (trianguled_model != null){
+
+                    applyTransformations(
+                            parseTextField(SxField, false), parseTextField(SyField, false), parseTextField(SzField, false),
+                            parseTextField(RxField, false), parseTextField(RyField, false), parseTextField(RzField, false),
+                            parseTextField(TxField, true), parseTextField(TyField, true), parseTextField(TzField, true)
+                    );
+                } else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Проблемка");
+                    alert.setHeaderText("Чтобы изменять сначала загрузите модель");
+
+                    alert.showAndWait();
+                }
+
             });
             affButtonSave.setOnAction(e -> {
                 saveModelInFile();
@@ -148,7 +167,7 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            if (default_model != null) {
+            if (trianguled_model != null) {
                 render(lighte, canvas.getGraphicsContext2D(), camera, trianguled_model, (int) width, (int) height);
                 log.setSameLevel(System.Logger.Level.OFF);
             }
@@ -174,20 +193,15 @@ public class GuiController {
         affineTransf.setTy(translateY);
         affineTransf.setTz(translateZ);
 
-        // Применение трансформаций к модели
-      //  if (is_triangle.isSelected()) {
-            trianguled_model = affineTransf.transformModel(trianguled_model);
-      //  }
-         default_model = affineTransf.transformModel(default_model);
+        trianguled_model = affineTransf.transformModel(trianguled_model);
+
 
     }
 
     private void saveModelInFile() {
-        if (is_triangle.isSelected()) {
-            saveModel(trianguled_model);
-        } else {
-            saveModel(default_model);
-        }
+
+        saveModel(trianguled_model);
+
     }
 
     private void saveModel(Model model) {
@@ -210,15 +224,7 @@ public class GuiController {
     }
 
     private void returnOriginalModel() {
-        if (is_triangle.isSelected()) {
-            default_model = original_model;
-            normal_model = new Normalization(default_model).recalceNormales();
-            trianguled_model = new Triangulation(normal_model).triangulate();
-            is_triangle.setSelected(false);
-
-        } else {
-            default_model = original_model;
-        }
+            trianguled_model = original_model;
     }
 
     private float parseTextField(TextField textField, boolean isTranslate) {
@@ -236,13 +242,17 @@ public class GuiController {
     private void loadModel(Path fileName) {
         try {
             String fileContent = Files.readString(fileName);
-            original_model = ObjReader.read(fileContent);
-            default_model = ObjReader.read(fileContent);
-            normal_model = new Normalization(default_model).recalceNormales();
-            trianguled_model = new Triangulation(normal_model).triangulate();
-            // todo: обработка ошибок
-        } catch (IOException exception) {
 
+            Model default_model = ObjReader.read(fileContent);
+            Model normal_model = new Normalization(default_model).recalculateNormals();
+            trianguled_model = new Triangulation(normal_model).triangulate();
+            original_model = trianguled_model;
+        } catch (Exception exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Проблемка");
+            alert.setHeaderText("Эту модель невозможно прочитать");
+
+            alert.showAndWait();
         }
     }
 
@@ -299,21 +309,38 @@ public class GuiController {
 
     @FXML
     private void onOpenTextureMenuItemClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Изображение", List.of("*.png","*.bmp","*.jpg","*.jpeg")));
-        fileChooser.setTitle("Выбрать текстуру");
+        if (trianguled_model != null){
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Изображение", List.of("*.png","*.bmp","*.jpg","*.jpeg")));
+            fileChooser.setTitle("Выбрать текстуру");
 
-        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
-        if (file == null) {
-            return;
+            File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+            if (file == null) {
+                return;
+            }
+
+            trianguled_model.getTexture().setTexture(file);
+        } else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Проблемка");
+            alert.setHeaderText("Чтобы выбрать текстуру сначала загрузите модель");
+
+            alert.showAndWait();
+
         }
-
-        texture.setTexture(file);
     }
 
     @FXML
     private void resetTextureMenuItemClick() {
-        texture.reverseTexture();
+        if (trianguled_model != null){
+            trianguled_model.getTexture().reverseTexture();
+        } else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Проблемка");
+            alert.setHeaderText("Чтобы показывать и скрывать текстуры сначала загрузите модель");
+
+            alert.showAndWait();
+        }
     }
     @FXML
     private void loadCube() {
@@ -380,7 +407,7 @@ public class GuiController {
 
     @FXML
     private void setBlikeLighte() {
-        lighte = new BlikeLighte();
+        lighte = new SpecularLighte();
     }
 
     @FXML

@@ -1,9 +1,9 @@
 package com.cgvsu.render_engine;
 
 import com.cgvsu.logger.SimpleConsoleLogger;
-import com.cgvsu.painter_engine.Rasterization;
-import com.cgvsu.painter_engine.TriangleTextureForPainting;
-import com.cgvsu.painter_engine.light.Lighter;
+import com.cgvsu.render_engine.light.Lighte;
+import com.cgvsu.render_engine.rasterization.Rasterization;
+import com.cgvsu.render_engine.rasterization.TriangleTextureForPainting;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;
@@ -23,7 +23,7 @@ public class RenderEngine {
     //private ProtoCurvePainter painter;
 
     public static void render(
-            final Lighter lighte,
+            final Lighte lighte,
             final GraphicsContext graphicsContext,
             final Camera camera,
             final Model mesh,
@@ -34,7 +34,7 @@ public class RenderEngine {
         if (log.isLoggable(System.Logger.Level.TRACE)) {
             log.log(System.Logger.Level.TRACE, "==Camera position: " + camera.getPosition() + "==");
         }
-        Rasterization painter = new Rasterization(lighte, graphicsContext, width, height, camera.getPosition());
+        Rasterization painter = new Rasterization(lighte, graphicsContext, width, height, camera.getPosition(), mesh.getTexture());
         Matrix4x4 modelMatrix = rotateScaleTranslate();
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();

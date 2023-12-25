@@ -154,23 +154,18 @@ public class AffineTransf {
         return VectorMath.mullMatrix4x4OnVector3D(A, v);
     }
 
-    public Model transformModel(Model m) {
-        Model rez = new Model();
-        rez.polygons = new ArrayList<>(m.polygons);
-        rez.textureVertices = new ArrayList<>(m.textureVertices);
-        //Полигоны и текстурные вершины не изменяются
+    public Model transformModel(Model model) {
 
-        rez.vertices = new ArrayList<>();
-        for (Vector3D v : m.vertices) {
-            rez.vertices.add(transformVertex(v));
+
+        for (int i = 0; i < model.vertices.size(); i++) {
+            model.vertices.set(i, transformVertex(model.vertices.get(i)));
         }
 
-        for (Vector3D v : m.normals) {
-            rez.normals.add(VectorMath.mullMatrix4x4OnVector3D(R,v));
-            //На преобразование нормалей влияет только матрица поворота
+        for (int i = 0; i < model.normals.size(); i++) {
+            model.normals.set(i,  VectorMath.mullMatrix4x4OnVector3D(R,  model.normals.get(i)));
         }
 
-        return rez;
+        return model;
     }
 
 
