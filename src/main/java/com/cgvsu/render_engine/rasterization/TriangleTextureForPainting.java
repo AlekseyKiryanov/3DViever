@@ -1,4 +1,4 @@
-package com.cgvsu.painter_engine;
+package com.cgvsu.render_engine.rasterization;
 
 import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;

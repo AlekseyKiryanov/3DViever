@@ -3,6 +3,8 @@ package com.cgvsu.painter_engine;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objwriter.ObjWriter;
+import com.cgvsu.editing_model.Normalization;
+import com.cgvsu.editing_model.Triangulation;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ class TriangulationTest {
         String fileContent = Files.readString(fileName);
 
         Model model = ObjReader.read(fileContent);
-        Model n_model = new Normalization(model).recalceNormales();
+        Model n_model = new Normalization(model).recalculateNormals();
         Model t_model = new Triangulation(n_model).triangulate();
 
         ObjWriter.write("primitives\\test.obj", t_model);
@@ -30,7 +32,7 @@ class TriangulationTest {
         String fileContent = Files.readString(fileName);
 
         Model model = ObjReader.read(fileContent);
-        Model n_model = new Normalization(model).recalceNormales();
+        Model n_model = new Normalization(model).recalculateNormals();
         Model t_model = new Triangulation(n_model).triangulate();
 
         ObjWriter.write("primitives\\test.obj", t_model);
@@ -42,7 +44,7 @@ class TriangulationTest {
         String fileContent = Files.readString(fileName);
 
         Model model = ObjReader.read(fileContent);
-        Model n_model = new Normalization(model).recalceNormales();
+        Model n_model = new Normalization(model).recalculateNormals();
         Model t_model = new Triangulation(n_model).triangulate();
 
         ObjWriter.write("primitives\\test.obj", t_model);

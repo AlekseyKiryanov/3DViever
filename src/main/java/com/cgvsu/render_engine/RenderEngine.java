@@ -1,9 +1,9 @@
 package com.cgvsu.render_engine;
 
 import com.cgvsu.logger.SimpleConsoleLogger;
-import com.cgvsu.painter_engine.Rasterization;
-import com.cgvsu.painter_engine.TriangleTextureForPainting;
-import com.cgvsu.painter_engine.light.Lighter;
+import com.cgvsu.render_engine.light.Lighte;
+import com.cgvsu.render_engine.rasterization.Rasterization;
+import com.cgvsu.render_engine.rasterization.TriangleTextureForPainting;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;
@@ -11,19 +11,17 @@ import javafx.scene.canvas.GraphicsContext;
 
 import com.cgvsu.model.Model;
 
-import static com.cgvsu.render_engine.GraphicConveyor.*;
 import static com.cgvsu.vectormath.matrix.Matrix4x4.multiplyMatrix4ByVector3;
 import static com.cgvsu.vectormath.matrix.Matrix4x4.rotateScaleTranslate;
+import static com.cgvsu.vectormath.vector.Vector3D.vertexToPoint;
 
 public class RenderEngine {
 
     private final static SimpleConsoleLogger log = SimpleConsoleLogger.getInstance();
 
 
-    //private ProtoCurvePainter painter;
-
     public static void render(
-            final Lighter lighte,
+            final Lighte lighte,
             final GraphicsContext graphicsContext,
             final Camera camera,
             final Model mesh,
@@ -34,7 +32,7 @@ public class RenderEngine {
         if (log.isLoggable(System.Logger.Level.TRACE)) {
             log.log(System.Logger.Level.TRACE, "==Camera position: " + camera.getPosition() + "==");
         }
-        Rasterization painter = new Rasterization(lighte, graphicsContext, width, height, camera.getPosition());
+        Rasterization painter = new Rasterization(lighte, graphicsContext, width, height, camera.getPosition(), mesh.getTexture());
         Matrix4x4 modelMatrix = rotateScaleTranslate();
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
@@ -45,7 +43,6 @@ public class RenderEngine {
 
         final int nPolygons = mesh.polygons.size();
         for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
-
 
             Vector3D vertex1 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(0));
             Vector3D vertex1M = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex1);
@@ -97,11 +94,11 @@ public class RenderEngine {
                 log.log(System.Logger.Level.TRACE, "Treangle " + polygonInd + " A=" + resultPoint1 + " B=" + resultPoint2 + " C=" + resultPoint3);
             }
 
-
             painter.paintTriangleTexture(new TriangleTextureForPainting(resultPoint1, resultPoint2, resultPoint3,
                     z1, z2, z3,
                     normal1, normal2, normal3,
                     texture1, texture2, texture3));
+
 
         }
     }

@@ -6,7 +6,7 @@ public class Vector3D {
     private float x;
     private float y;
     private float z;
-    private static float eps = 1e-4f;
+    private static final float eps = 1e-4f;
 
     public Vector3D(float x, float y, float z) {
         this.x = x;
@@ -24,6 +24,24 @@ public class Vector3D {
                 return z;
         }
         throw new IllegalArgumentException("Индекс выходит за границы");
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public void setAll(float valueX, float valueY, float valueZ){
+        this.x = valueX;
+        this.y = valueY;
+        this.z = valueZ;
     }
 
     // Сложение векторов
@@ -83,32 +101,6 @@ public class Vector3D {
         );
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Vector3D vector3D = (Vector3D) o;
-
-        if (Math.abs(x - vector3D.x) > eps) return false;
-        if (Math.abs(y - vector3D.y) > eps) return false;
-        return Math.abs(z - vector3D.z) < eps;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y, z);
-    }
-
-    @Override
-    public String toString() {
-        return "Vector3D{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
-    }
-
     // Сложение векторов
     public final void add(Vector3D other1, Vector3D other2) {
         this.x = other1.x + other2.x;
@@ -151,5 +143,35 @@ public class Vector3D {
         this.z = other1.x * other2.y - other1.y * other2.x;
         this.x = v1;
         this.y = v2;
+    }
+
+    public static Vector2D vertexToPoint(final Vector3D vertex, final int width, final int height) {
+        return new Vector2D((float) vertex.get(0) * width + width / 2.0F, (float) -vertex.get(1) * height + height / 2.0F);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vector3D vector3D = (Vector3D) o;
+
+        if (Math.abs(x - vector3D.x) > eps) return false;
+        if (Math.abs(y - vector3D.y) > eps) return false;
+        return Math.abs(z - vector3D.z) < eps;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
+    }
+
+    @Override
+    public String toString() {
+        return "Vector3D{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
     }
 }

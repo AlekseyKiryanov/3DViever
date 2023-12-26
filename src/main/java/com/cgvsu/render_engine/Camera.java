@@ -24,6 +24,16 @@ public class Camera {
         this.farPlane = farPlane;
     }
 
+    private Vector3D position;
+    private Vector3D target;
+    private float fov;
+    private float aspectRatio;
+    private float nearPlane;
+    private float farPlane;
+    private double mousePosX;
+    private double mousePosY;
+    public double mouseDeltaY;
+
     public void setPosition(final Vector3D position) {
         this.position = position;
     }
@@ -57,12 +67,8 @@ public class Camera {
     }
 
     Matrix4x4 getProjectionMatrix() {
-        return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
+        return perspective(fov, aspectRatio, nearPlane, farPlane);
     }
-
-    private double mousePosX;
-    private double mousePosY;
-    public double mouseDeltaY;
 
     public void handleMouseInput(double x, double y, boolean isPrimaryButtonDown, boolean isSecondaryButtonDown) {
 
@@ -82,7 +88,6 @@ public class Camera {
             mouseDeltaY = 0;
         }
 
-
         mousePosX = x;
         mousePosY = y;
     }
@@ -98,26 +103,4 @@ public class Camera {
 
         position = multiplyMatrix4ByVector3(rotationMatrix, position);
     }
-
-    private void rotateCamera(float dx, float dy, float dz) {
-        float rotationX = -dy * 0.2f;
-        float rotationY = -dx * 0.2f;
-        float rotationZ = -dz * 0.2f;
-
-        Matrix4x4 rotationMatrixX = rotate(rotationX, 1, 0, 0);
-        Matrix4x4 rotationMatrixY = rotate(rotationY, 0, 1, 0);
-        Matrix4x4 rotationMatrixZ = rotate(rotationZ, 0, 0, 1);
-
-        Matrix4x4 rotationMatrix1 = rotationMatrixX.multiply(rotationMatrixY);
-        Matrix4x4 rotationMatrix = rotationMatrix1.multiply(rotationMatrixZ);
-
-        position = multiplyMatrix4ByVector3(rotationMatrix, position);
-    }
-
-    private Vector3D position;
-    private Vector3D target;
-    private float fov;
-    private float aspectRatio;
-    private float nearPlane;
-    private float farPlane;
 }
