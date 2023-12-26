@@ -14,7 +14,7 @@ public class AffineTransform {
     private RotationOrder rotationOrder = RotationOrder.ZYX;
 
     private Vector3D translation = new Vector3D(0,0,0);
-    private Vector3D rotation = new Vector3D(1, 1,1 );
+    private Vector3D rotation = new Vector3D(0, 0,0 );
     private Vector3D scale = new Vector3D(1, 1,1);
 
     private Matrix4x4 RotationMatrix = new Matrix4x4(1, 0, 0, 0,
@@ -127,7 +127,7 @@ public class AffineTransform {
     }
 
     public Vector3D transformVertex(Vector3D v) {
-        return multMatrix4x4OnVector3D(AffineTransformMatrix, v);
+        return Matrix4x4.multMatrix4x4OnVector3D(AffineTransformMatrix, v);
     }
 
 
