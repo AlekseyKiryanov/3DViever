@@ -15,6 +15,27 @@ public class Vector3DTest {
         assertEquals(7.0f, result.get(1), 0.01);
         assertEquals(9.0f, result.get(2), 0.01);
     }
+    @Test
+    public void testSet() {
+        Vector3D v1 = new Vector3D(1.0f, 2.0f, 3.0f);
+        Vector3D v2 = new Vector3D(0, 0, 0);
+        Vector3D v3 = new Vector3D(1, 1, 1);
+        v1.setAll(2, 2, 2);
+        v2.setX(2);
+        v3.setAll(3, 3,3);
+        v3.setY(1);
+        assertEquals(2, v1.get(0), 0.01);
+        assertEquals(2, v1.get(1), 0.01);
+        assertEquals(2, v1.get(2), 0.01);
+
+        assertEquals(2, v2.get(0), 0.01);
+        assertEquals(0, v2.get(1), 0.01);
+        assertEquals(0, v2.get(2), 0.01);
+
+        assertEquals(3, v3.get(0), 0.01);
+        assertEquals(1, v3.get(1), 0.01);
+        assertEquals(3, v3.get(2), 0.01);
+    }
 
     @Test
     public void testSubtraction() {
