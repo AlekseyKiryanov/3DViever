@@ -3,7 +3,7 @@ package com.cgvsu.render_engine.light;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.paint.Color;
 
-public class SpecularLighte implements Lighte {
+public class SpecularLight implements Light {
     @Override
     public Color setLight(Vector3D light, Vector3D defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
 
@@ -30,7 +30,7 @@ public class SpecularLighte implements Lighte {
         specColor.multiplyThis((float) Math.pow(Float.max(L.dotProduct(R), 0), specPower));
 
 
-        N.multiplyThis(-1);
+
         float k = 0.4F;
         float l = -1 * light.dotProduct(N);
         l = Math.min(1, Math.max(l, 0));

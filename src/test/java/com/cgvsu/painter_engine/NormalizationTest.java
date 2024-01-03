@@ -1,8 +1,8 @@
 package com.cgvsu.painter_engine;
 
 import com.cgvsu.model.Model;
-import com.cgvsu.objreader.ObjReader;
-import com.cgvsu.objwriter.ObjWriter;
+import com.cgvsu.obj_reader.ObjReader;
+import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.editing_model.Normalization;
 import com.cgvsu.editing_model.Triangulation;
 import org.junit.jupiter.api.Test;

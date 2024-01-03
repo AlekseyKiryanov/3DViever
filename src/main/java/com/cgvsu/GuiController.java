@@ -2,12 +2,16 @@ package com.cgvsu;
 
 
 import com.cgvsu.affine_transform.AffineTransform;
+import com.cgvsu.editing_model.Deletion;
 import com.cgvsu.editing_model.Normalization;
 import com.cgvsu.editing_model.Triangulation;
 import com.cgvsu.logger.SimpleConsoleLogger;
-import com.cgvsu.objwriter.ObjWriter;
-import com.cgvsu.render_engine.*;
+import com.cgvsu.obj_writer.ObjWriter;
+import com.cgvsu.render_engine.camera.Camera;
 import com.cgvsu.render_engine.light.*;
+import com.cgvsu.render_engine.rasterization.Rasterization;
+import com.cgvsu.render_engine.rendering.RenderEngine;
+import com.cgvsu.render_engine.rendering.RenderType;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,6 +21,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -28,9 +33,8 @@ import java.io.File;
 import java.util.List;
 
 import com.cgvsu.model.Model;
-import com.cgvsu.objreader.ObjReader;
+import com.cgvsu.obj_reader.ObjReader;
 
-import static com.cgvsu.render_engine.RenderEngine.render;
 
 import javafx.animation.AnimationTimer;
 
@@ -40,6 +44,7 @@ public class GuiController {
 
 
     final private float TRANSLATION = 0.5F;
+
 
     @FXML
     AnchorPane anchorPane;
@@ -75,30 +80,36 @@ public class GuiController {
     private final AffineTransform affineTransform = new AffineTransform();
 
     private boolean isAutoRotate = false;
+
+    private RenderType renderType = RenderType.NO_MESH;
     private Model originalModel = null;
     private Model trianguledModel = null;
 
-    private Lighte lighte = new PrimeLighte();
+    private Light lighte = new PrimeLight();
 
     private final SimpleConsoleLogger log = SimpleConsoleLogger.getInstance();
+    private final Rasterization rasterization = Rasterization.getInstance();
+    private final Deletion deletion = Deletion.getInstance();
 
 
     private Camera camera = new Camera(
             new Vector3D(0, 0, 100),
             new Vector3D(0, 0, 0),
-            1.0F, 1, 0.01F, 100);
+            1.0F, 1, -20, 20);
+
+    private final RenderEngine renderEngine = new RenderEngine();
 
     private Timeline timeline;
 
     @FXML
     private void initialize() {
 
-       mainColor.setOnAction(new EventHandler<ActionEvent>() {
+        mainColor.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (trianguledModel != null){
+                if (trianguledModel != null) {
                     trianguledModel.getTexture().setDefaultColor(mainColor.getValue());
-                } else{
+                } else {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Проблемка");
                     alert.setHeaderText("Чтобы изменить сначала загрузите модель");
@@ -120,12 +131,19 @@ public class GuiController {
                 camera.mouseDeltaY = event2.getDeltaY();
                 camera.handleMouseInput(event2.getX(), event2.getY(), false, false);
             });
+            canvas.setOnMouseClicked(event -> {
+                switch (event.getButton()) {
+                    case PRIMARY -> handlePrimaryClick(event);
+                    case SECONDARY -> handleRightClick(event);
+                }
+            });
+
             // Установка обработчиков событий для кнопок
             rotateButton.setOnAction(e -> {
 
-                if (trianguledModel != null){
+                if (trianguledModel != null) {
                     startRotationAnimation();
-                } else{
+                } else {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Проблемка");
                     alert.setHeaderText("Чтобы вращать сначала загрузите модель");
@@ -137,14 +155,14 @@ public class GuiController {
 
             affButton.setOnAction(e -> {
 
-                if (trianguledModel != null){
+                if (trianguledModel != null) {
 
                     applyTransformations(
                             parseTextField(SxField, false), parseTextField(SyField, false), parseTextField(SzField, false),
                             parseTextField(RxField, false), parseTextField(RyField, false), parseTextField(RzField, false),
                             parseTextField(TxField, true), parseTextField(TyField, true), parseTextField(TzField, true)
                     );
-                } else{
+                } else {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Проблемка");
                     alert.setHeaderText("Чтобы изменять сначала загрузите модель");
@@ -169,16 +187,40 @@ public class GuiController {
             double height = canvas.getHeight();
 
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-            camera.setAspectRatio((float) (width / height));
+            camera.setAspectRatio((float) (height / width));
+
+            rasterization.clearScreen(canvas.getGraphicsContext2D(), (int) width, (int) height);
+            rasterization.setLighte(lighte);
+            rasterization.setCoordinateLight(camera.getPosition());
 
             if (trianguledModel != null) {
-                render(lighte, canvas.getGraphicsContext2D(), camera, trianguledModel, (int) width, (int) height);
+
+                rasterization.setTexture(trianguledModel.getTexture());
+                renderEngine.render(camera, trianguledModel, (int) width, (int) height);
                 log.setSameLevel(System.Logger.Level.OFF);
             }
         });
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+    }
+
+    private void handlePrimaryClick(MouseEvent event) {
+        if (renderType == RenderType.SELECTION_VERTICES) {
+            rasterization.chooseVertex((int) event.getX(), (int) event.getY());
+        }
+        if (renderType == RenderType.SELECTION_POLYGONS) {
+            rasterization.choosePolygon((int) event.getX(), (int) event.getY());
+        }
+    }
+
+    private void handleRightClick(MouseEvent event) {
+        if (renderType == RenderType.SELECTION_VERTICES) {
+            rasterization.cancelChooseVertex((int) event.getX(), (int) event.getY());
+        }
+        if (renderType == RenderType.SELECTION_POLYGONS) {
+            rasterization.cancelChoosePolygon((int) event.getX(), (int) event.getY());
+        }
     }
 
     private void applyTransformations(
@@ -222,7 +264,7 @@ public class GuiController {
     }
 
     private void returnOriginalModel() {
-            trianguledModel = originalModel.copy();
+        trianguledModel = originalModel.copy();
     }
 
     private float parseTextField(TextField textField, boolean isTranslate) {
@@ -237,6 +279,9 @@ public class GuiController {
     }
 
     private void loadModel(Path fileName) {
+        rasterization.resetChooseVertices();
+        rasterization.resetChosenPolygons();
+        deletion.resetStack();
         try {
             String fileContent = Files.readString(fileName);
 
@@ -305,9 +350,9 @@ public class GuiController {
 
     @FXML
     private void onOpenTextureMenuItemClick() {
-        if (trianguledModel != null){
+        if (trianguledModel != null) {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Изображение", List.of("*.png","*.bmp","*.jpg","*.jpeg")));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Изображение", List.of("*.png", "*.bmp", "*.jpg", "*.jpeg")));
             fileChooser.setTitle("Выбрать текстуру");
 
             File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
@@ -316,7 +361,7 @@ public class GuiController {
             }
 
             trianguledModel.getTexture().setTexture(file);
-        } else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Проблемка");
             alert.setHeaderText("Чтобы выбрать текстуру сначала загрузите модель");
@@ -328,9 +373,9 @@ public class GuiController {
 
     @FXML
     private void resetTextureMenuItemClick() {
-        if (trianguledModel != null){
+        if (trianguledModel != null) {
             trianguledModel.getTexture().reverseTexture();
-        } else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Проблемка");
             alert.setHeaderText("Чтобы показывать и скрывать текстуры сначала загрузите модель");
@@ -338,6 +383,7 @@ public class GuiController {
             alert.showAndWait();
         }
     }
+
     @FXML
     private void loadCube() {
         loadModel(Path.of("primitives\\cube.obj"));
@@ -359,60 +405,84 @@ public class GuiController {
     }
 
     @FXML
-    public void handleCameraForward(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3D(0, 0, -TRANSLATION));
-    }
-
-    @FXML
-    public void handleCameraBackward(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3D(0, 0, TRANSLATION));
-    }
-
-    @FXML
-    public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3D(TRANSLATION, 0, 0));
-    }
-
-    @FXML
-    public void handleCameraRight(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3D(-TRANSLATION, 0, 0));
-    }
-
-    @FXML
-    public void handleCameraUp(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3D(0, TRANSLATION, 0));
-    }
-
-    @FXML
-    public void handleCameraDown(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3D(0, -TRANSLATION, 0));
-    }
-
-    @FXML
     private ColorPicker mainColor;
 
     @FXML
     private void setPrimeLighte() {
-        lighte = new PrimeLighte();
+        lighte = new PrimeLight();
     }
 
     @FXML
     private void setPoligonLighte() {
-        lighte = new PoligonLighte();
+        lighte = new PolygonLight();
     }
 
     @FXML
     private void setBlikeLighte() {
-        lighte = new SpecularLighte();
+        lighte = new SpecularLight();
     }
 
     @FXML
     private void setBorderLighte() {
-        lighte = new BorderLighte();
+        lighte = new BorderLight();
     }
 
     @FXML
-    public void activeTraceLog(ActionEvent actionEvent) {
+    private RadioMenuItem noMesh;
+
+    @FXML
+    private RadioMenuItem selectionVertices;
+
+    @FXML
+    private RadioMenuItem selectionPolygons;
+
+
+    @FXML
+    private void setNoMeshRender() {
+        renderType = RenderType.NO_MESH;
+        renderEngine.setRender(RenderType.NO_MESH);
+        selectionPolygons.setSelected(false);
+        selectionVertices.setSelected(false);
+        noMesh.setSelected(true);
+    }
+
+    @FXML
+    private void setRenderSelectionVertices() {
+        renderType = RenderType.SELECTION_VERTICES;
+        renderEngine.setRender(RenderType.SELECTION_VERTICES);
+        selectionPolygons.setSelected(false);
+        selectionVertices.setSelected(true);
+        noMesh.setSelected(false);
+    }
+
+    @FXML
+    private void setRenderSelectionPolygons() {
+        renderType = RenderType.SELECTION_POLYGONS;
+        renderEngine.setRender(RenderType.SELECTION_POLYGONS);
+        selectionPolygons.setSelected(true);
+        selectionVertices.setSelected(false);
+        noMesh.setSelected(false);
+    }
+
+    @FXML
+    public void activeTraceLog() {
         log.setSameLevel(System.Logger.Level.TRACE);
+    }
+
+    @FXML
+    public void deleteVertices() {
+        deletion.deleteVerteces(trianguledModel, rasterization.getChosenVertexes());
+        rasterization.resetChooseVertices();
+    }
+
+    @FXML
+    public void deletePolygons() {
+        deletion.deletePolygons(trianguledModel, rasterization.getChosenPolygons());
+        rasterization.resetChosenPolygons();
+    }
+
+    @FXML
+    public void cancelDeletion(){
+        trianguledModel = deletion.returnOldModel(trianguledModel);
     }
 }

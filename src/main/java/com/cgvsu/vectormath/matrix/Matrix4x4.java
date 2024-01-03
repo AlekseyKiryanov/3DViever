@@ -254,8 +254,8 @@ public class Matrix4x4{
 
         float tangentMinusOnDegree = (float) (1.0F / (Math.tan(fov * 0.5F)));
 
-        matrix[0][0] = tangentMinusOnDegree / aspectRatio;
-        matrix[1][1] = tangentMinusOnDegree;
+        matrix[0][0] = tangentMinusOnDegree ;
+        matrix[1][1] = tangentMinusOnDegree / aspectRatio;
         matrix[2][2] = (farPlane + nearPlane) / (farPlane - nearPlane);
         matrix[2][3] = 1.0F;
         matrix[3][2] = 2 * (nearPlane * farPlane) / (nearPlane - farPlane);

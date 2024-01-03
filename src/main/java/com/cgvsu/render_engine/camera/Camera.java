@@ -1,4 +1,4 @@
-package com.cgvsu.render_engine;
+package com.cgvsu.render_engine.camera;
 
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
@@ -62,11 +62,11 @@ public class Camera {
         this.target.addThis(target);
     }
 
-    Matrix4x4 getViewMatrix() {
+    public Matrix4x4 getViewMatrix() {
         return lookAt(position, target);
     }
 
-    Matrix4x4 getProjectionMatrix() {
+    public Matrix4x4 getProjectionMatrix() {
         return perspective(fov, aspectRatio, nearPlane, farPlane);
     }
 

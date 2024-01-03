@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class Texture {
 
-    private Vector3D defaultColor = new Vector3D(1, 1, 1);
+    private Vector3D defaultColor = new Vector3D(0.1F, 0.2F, 0.6F);
 
     private Vector3D[][] pixels;
     int width;
@@ -22,7 +22,7 @@ public class Texture {
     private boolean hasTexture = false;
     private boolean showTexture = true;
 
-    public void reverseTexture(){
+    public void reverseTexture() {
         this.showTexture = !this.showTexture;
     }
 

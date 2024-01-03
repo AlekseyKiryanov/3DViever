@@ -1,4 +1,4 @@
-package com.cgvsu.objreader;
+package com.cgvsu.obj_reader;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -62,10 +62,10 @@ public class ObjReader {
 					Float.parseFloat(wordsInLineWithoutToken.get(1)),
 					Float.parseFloat(wordsInLineWithoutToken.get(2)));
 		} catch(NumberFormatException e) {
-			throw new ObjReaderException("Failed to parse float value.", lineInd);
+			throw new ObjReaderException("Ошибка чтения дробного числа", lineInd);
 
 		} catch(IndexOutOfBoundsException e) {
-			throw new ObjReaderException("Too few vertex arguments.", lineInd);
+			throw new ObjReaderException("Слишком много аргументов в строке", lineInd);
 		}
 	}
 
@@ -76,10 +76,10 @@ public class ObjReader {
 					Float.parseFloat(wordsInLineWithoutToken.get(1)));
 
 		} catch(NumberFormatException e) {
-			throw new ObjReaderException("Failed to parse float value.", lineInd);
+			throw new ObjReaderException("Ошибка чтения дробного числа", lineInd);
 
 		} catch(IndexOutOfBoundsException e) {
-			throw new ObjReaderException("Too few texture vertex arguments.", lineInd);
+			throw new ObjReaderException("Слишком много аргументов в строке", lineInd);
 		}
 	}
 
@@ -90,10 +90,10 @@ public class ObjReader {
 					Float.parseFloat(wordsInLineWithoutToken.get(1)),
 					Float.parseFloat(wordsInLineWithoutToken.get(2)));
 		} catch(NumberFormatException e) {
-			throw new ObjReaderException("Failed to parse float value.", lineInd);
+			throw new ObjReaderException("Ошибка чтения дробного числа", lineInd);
 
 		} catch(IndexOutOfBoundsException e) {
-			throw new ObjReaderException("Too few normal arguments.", lineInd);
+			throw new ObjReaderException("Слишком много аргументов в строке", lineInd);
 		}
 	}
 
@@ -141,15 +141,15 @@ public class ObjReader {
 					}
 				}
 				default -> {
-					throw new ObjReaderException("Invalid element size.", lineInd);
+					throw new ObjReaderException("Неверный размер элемента.", lineInd);
 				}
 			}
 
 		} catch(NumberFormatException e) {
-			throw new ObjReaderException("Failed to parse int value.", lineInd);
+			throw new ObjReaderException("Ошибка чтения дробного числа", lineInd);
 
 		} catch(IndexOutOfBoundsException e) {
-			throw new ObjReaderException("Too few arguments.", lineInd);
+			throw new ObjReaderException("Слишком много аргументов в строке", lineInd);
 		}
 	}
 }

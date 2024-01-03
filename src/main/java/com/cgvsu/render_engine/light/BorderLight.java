@@ -3,7 +3,7 @@ package com.cgvsu.render_engine.light;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.paint.Color;
 
-public class BorderLighte implements Lighte {
+public class BorderLight implements Light {
     @Override
     public Color setLight(Vector3D light, Vector3D defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
 
@@ -24,12 +24,12 @@ public class BorderLighte implements Lighte {
         float specPower = 8.0F;
         specColor.multiplyThis((float) Math.pow(Float.max(L.dotProduct(R), 0), specPower));
         float rimPower = 8.0F;
-        float biass = 0.2F;
+        float biass = 0.3F;
         Vector3D rimColor = new Vector3D(1, 1, 1);
+        N.multiplyThis(-1);
         rimColor.multiplyThis((float) Math.pow(1 + biass - Float.max(N.dotProduct(V), 0), rimPower));
         specColor.addThis(rimColor);
 
-        N.multiplyThis(-1);
         float k = 0.4F;
         float l = -1 * light.dotProduct(N);
         l = Math.min(1, Math.max(l, 0));

@@ -17,69 +17,41 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.paint.Color?>
 
+<?import javafx.scene.control.RadioMenuItem?>
 <AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.cgvsu.GuiController">
     <MenuBar>
-        <Menu mnemonicParsing="false" text="File">
-            <MenuItem mnemonicParsing="false" onAction="#onOpenModelMenuItemClick" text="Load Model">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#onOpenTextureMenuItemClick" text="Выбрать текстуру">
+        <Menu mnemonicParsing="false" text="Файл">
+            <MenuItem mnemonicParsing="false" onAction="#onOpenModelMenuItemClick" text="Загрузить модель"/>
+            <MenuItem mnemonicParsing="false" onAction="#onOpenTextureMenuItemClick" text="Выбрать текстуру"/>
+            <MenuItem mnemonicParsing="false" onAction="#resetTextureMenuItemClick" text="Убрать/ показать текстуру"/>
 
-            </MenuItem>
-
-            <MenuItem mnemonicParsing="false" onAction="#resetTextureMenuItemClick" text="Убрать/ показать текстуру">
-
-            </MenuItem>
-
-
-            <SeparatorMenuItem/>
-
-            <MenuItem mnemonicParsing="false" onAction="#loadCube" text="Open cube">
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="DIGIT1" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#loadCilynder" text="Open cylinder">
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="DIGIT2" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#loadCone" text="Open cone">
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="DIGIT3" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#loadTorus" text="Open torus">
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="DIGIT4" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
-                </accelerator>
-            </MenuItem>
         </Menu>
-        <Menu mnemonicParsing="false" text="Setting">
+        <Menu mnemonicParsing="false" text="Коллекция">
+            <MenuItem mnemonicParsing="false" onAction="#loadCube" text="Куб"/>
+            <MenuItem mnemonicParsing="false" onAction="#loadCilynder" text="Цилиндр"/>
+            <MenuItem mnemonicParsing="false" onAction="#loadCone" text="Конус"/>
+            <MenuItem mnemonicParsing="false" onAction="#loadTorus" text="Тор"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Редактирование">
+            <RadioMenuItem fx:id="noMesh" mnemonicParsing="false" selected="true" onAction="#setNoMeshRender" text="Без сетки"/>
+            <RadioMenuItem fx:id="selectionVertices" mnemonicParsing="false" onAction="#setRenderSelectionVertices" text="Выбор вершин"/>
+            <RadioMenuItem fx:id="selectionPolygons" mnemonicParsing="false" onAction="#setRenderSelectionPolygons" text="Выбор полигонов"/>
+            <SeparatorMenuItem/>
+            <MenuItem mnemonicParsing="false" onAction="#deleteVertices" text="Удалить вершины"/>
+            <MenuItem mnemonicParsing="false" onAction="#deletePolygons" text="Удалить полигоны"/>
+            <MenuItem mnemonicParsing="false" onAction="#cancelDeletion" text="Отменить"/>
 
-            <MenuItem mnemonicParsing="false" onAction="#activeTraceLog" text="PrintLog">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="UP" shortcut="UP"/>
-                </accelerator>
-            </MenuItem>
+
+        </Menu>
+        <Menu mnemonicParsing="false" text="Параметры">
+            <MenuItem mnemonicParsing="false" onAction="#activeTraceLog" text="Распечатать логи"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Освещение">
-            <MenuItem mnemonicParsing="false" onAction="#setPrimeLighte" text="Простое освещение">
-
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#setPoligonLighte" text="Полигональное">
-
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#setBlikeLighte" text="Бликовое">
-
-            </MenuItem>
-
-            <MenuItem mnemonicParsing="false" onAction="#setBorderLighte" text="Краевое">
-
-            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#setPrimeLighte" text="Простое освещение"/>
+            <MenuItem mnemonicParsing="false" onAction="#setPoligonLighte" text="Полигональное"/>
+            <MenuItem mnemonicParsing="false" onAction="#setBlikeLighte" text="Бликовое"/>
+            <MenuItem mnemonicParsing="false" onAction="#setBorderLighte" text="Краевое"/>
         </Menu>
     </MenuBar>
 
@@ -116,7 +88,7 @@
             <Label text="По Z:" GridPane.columnIndex="3"/>
         </children>
     </GridPane>
-    <Button fx:id="rotateButton" layoutX="292.0" mnemonicParsing="false" text="Auto-rotate ON/OFF"/>
+    <Button fx:id="rotateButton" layoutX="500.0" mnemonicParsing="false" text="Анимация вращения (вкл/выкл)"/>
     <Button fx:id="affButtonSave" layoutX="1323.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0"
             prefWidth="118.0" text="Сохранить модель"/>
     <Button fx:id="affButton" layoutX="1178.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0"
@@ -126,7 +98,7 @@
     <ColorPicker fx:id="mainColor" layoutY="30.0">
         <value>
 
-            <Color red="1" green="1" blue="1"/>
+            <Color red="0.1" green="0.2" blue="0.6"/>
 
         </value>
     </ColorPicker>
