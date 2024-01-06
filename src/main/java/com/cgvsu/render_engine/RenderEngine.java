@@ -11,8 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 import com.cgvsu.model.Model;
 
-import static com.cgvsu.vectormath.matrix.Matrix4x4.multiplyMatrix4ByVector3;
-import static com.cgvsu.vectormath.matrix.Matrix4x4.rotateScaleTranslate;
+import static com.cgvsu.vectormath.matrix.Matrix4x4.*;
 import static com.cgvsu.vectormath.vector.Vector3D.vertexToPoint;
 
 public class RenderEngine {
@@ -45,7 +44,7 @@ public class RenderEngine {
         for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
 
             Vector3D vertex1 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(0));
-            Vector3D vertex1M = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex1);
+            Vector3D vertex1M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex1);
 
             Vector2D resultPoint1 = vertexToPoint(vertex1M, width, height);
             float z1 = vertex1M.get(2) + 3;
@@ -60,7 +59,7 @@ public class RenderEngine {
 
 
             Vector3D vertex2 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(1));
-            Vector3D vertex2M = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex2);
+            Vector3D vertex2M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex2);
 
             Vector2D resultPoint2 = vertexToPoint(vertex2M, width, height);
             float z2 = vertex2M.get(2) + 3;
@@ -76,7 +75,7 @@ public class RenderEngine {
 
 
             Vector3D vertex3 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(2));
-            Vector3D vertex3M = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex3);
+            Vector3D vertex3M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex3);
 
             Vector2D resultPoint3 = vertexToPoint(vertex3M, width, height);
             float z3 = vertex3M.get(2) + 3;

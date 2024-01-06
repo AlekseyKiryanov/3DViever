@@ -77,7 +77,7 @@ public class Camera {
             rotateCamera((float) (x - mousePosX), (float) (y - mousePosY));
         } else if (isSecondaryButtonDown) {
     // Передвижение камеры влево/вправо при зажатой правой кнопке мыши
-            movePosition(new Vector3D((float) (x - mousePosX) * 0.1f, (float) (+y - mousePosY) * 0.1f, 0));
+            movePosition(new Vector3D((float) (x - mousePosX) * 0.1f, (float) (y - mousePosY) * 0.1f, 0));
         } else {
     // Передвижение камеры в зависимости от движения колесика мыши
             if (mouseDeltaY > 0) {
@@ -101,6 +101,6 @@ public class Camera {
 
         Matrix4x4 rotationMatrix = rotationMatrixX.multiply(rotationMatrixY);
 
-        position = multiplyMatrix4ByVector3(rotationMatrix, position);
+        position = multiplyMatrix4ByVector3DWithW(rotationMatrix, position);
     }
 }
