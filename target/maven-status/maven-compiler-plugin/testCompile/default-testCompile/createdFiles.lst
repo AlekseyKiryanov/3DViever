@@ -1,0 +1,9 @@
+com\cgvsu\vectormath\matrix\Matrix4x4Test.class
+com\cgvsu\vectormath\vector\Vector2DTest.class
+com\cgvsu\obj_reader\ObjReaderTest.class
+com\cgvsu\affine_transform\AffineTransformTest.class
+com\cgvsu\vectormath\vector\Vector4DTest.class
+com\cgvsu\vectormath\matrix\Matrix3x3Test.class
+com\cgvsu\vectormath\vector\Vector3DTest.class
+com\cgvsu\painter_engine\NormalizationTest.class
+com\cgvsu\painter_engine\TriangulationTest.class
