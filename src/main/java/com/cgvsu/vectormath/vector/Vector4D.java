@@ -16,6 +16,10 @@ public class Vector4D{
         this.w = w;
     }
 
+    public Vector3D toVector3D(){
+        return new Vector3D(this.x, this.y, this.z);
+    }
+
     public float get(int index) {
         switch (index){
             case 0: return x;

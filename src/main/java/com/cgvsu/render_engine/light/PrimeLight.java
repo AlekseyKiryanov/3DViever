@@ -3,28 +3,42 @@ package com.cgvsu.render_engine.light;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.paint.Color;
 
-public class PrimeLight implements Light {
+public class PrimeLight extends Light {
     @Override
-    public Color setLight(Vector3D light, Vector3D defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
+    public int setLight(Vector3D light, Vector3D eyes, int defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
 
-
-        Vector3D N = new Vector3D(0, 0, 0);
-        N.addThis(n1.multiply(alpha));
-        N.addThis(n2.multiply(beta));
-        N.addThis(n3.multiply(gama));
-
-
+        Vector3D N = calcNormal(alpha, beta, gama, n1, n2, n3);
 
         light = light.normalize();
-        N = N.normalize();
 
-        float k = 0.3F;
         float l = light.dotProduct(N);
-
         l = Math.min(1, Math.max(l, 0));
         float m = (1 - k) + k * l;
 
 
-        return Color.color(defColor.get(0) * m, defColor.get(1) * m, defColor.get(2) * m);
+        int b = (defColor) & 0xFF;
+        int g = (defColor >> 8) & 0xFF;
+        int r = (defColor >> 16) & 0xFF;
+        int a = defColor & 0xFF000000;
+
+        b = (int) (b * m);
+        g = (int) (g * m);
+        r = (int) (r * m);
+
+        r = (r << 16) & 0x00FF0000;
+        g = (g << 8) & 0x0000FF00;
+        b = b & 0x000000FF;
+
+        return a | r | g | b;
+    }
+
+    @Override
+    public void setSpecColor(int color) {
+
+    }
+
+    @Override
+    public void setReflectionColor(int color) {
+
     }
 }

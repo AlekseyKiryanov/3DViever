@@ -10,12 +10,14 @@ import static com.cgvsu.vectormath.matrix.Matrix4x4.*;
 public class Camera {
 
     public Camera(
+            final int number,
             final Vector3D position,
             final Vector3D target,
             final float fov,
             final float aspectRatio,
             final float nearPlane,
             final float farPlane) {
+        this.number = number;
         this.position = position;
         this.target = target;
         this.fov = fov;
@@ -24,6 +26,7 @@ public class Camera {
         this.farPlane = farPlane;
     }
 
+    private int number;
     private Vector3D position;
     private Vector3D target;
     private float fov;
@@ -101,6 +104,11 @@ public class Camera {
 
         Matrix4x4 rotationMatrix = rotationMatrixX.multiply(rotationMatrixY);
 
-        position = multiplyMatrix4ByVector3(rotationMatrix, position);
+        position = multiplyMatrix4ByVector3(rotationMatrix, position).toVector3D();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Камера %d {%.2f;  %.2f; %.2f}" , number, position.get(0), position.get(1), position.get(2));
     }
 }

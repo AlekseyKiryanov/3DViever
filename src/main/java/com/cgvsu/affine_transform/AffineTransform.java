@@ -13,9 +13,9 @@ public class AffineTransform {
 
     private RotationOrder rotationOrder = RotationOrder.ZYX;
 
-    private Vector3D translation = new Vector3D(0,0,0);
-    private Vector3D rotation = new Vector3D(0, 0,0 );
-    private Vector3D scale = new Vector3D(1, 1,1);
+    private Vector3D translation = new Vector3D(0, 0, 0);
+    private Vector3D rotation = new Vector3D(0, 0, 0);
+    private Vector3D scale = new Vector3D(1, 1, 1);
 
     private Matrix4x4 RotationMatrix = new Matrix4x4(1, 0, 0, 0,
             0, 1, 0, 0,
@@ -139,7 +139,7 @@ public class AffineTransform {
         }
 
         for (int i = 0; i < model.normals.size(); i++) {
-            model.normals.set(i,  Matrix4x4.multMatrix4x4OnVector3D(RotationMatrix,  model.normals.get(i)));
+            model.normals.set(i, multMatrix4x4OnVector3D(RotationMatrix.multiply(ScaleMatrix), model.normals.get(i)).normalize());
         }
 
         return model;
@@ -180,7 +180,8 @@ public class AffineTransform {
         scale.setZ(scaleZ);
         calculateAffineTransformMatrix();
     }
-    public void setScale(float scaleX, float scaleY, float scaleZ){
+
+    public void setScale(float scaleX, float scaleY, float scaleZ) {
         scale.setAll(scaleX, scaleY, scaleZ);
         calculateAffineTransformMatrix();
     }
@@ -212,7 +213,7 @@ public class AffineTransform {
         calculateAffineTransformMatrix();
     }
 
-    public void setRotation(float rotationX, float rotationY, float rotationZ){
+    public void setRotation(float rotationX, float rotationY, float rotationZ) {
         scale.setAll(rotationX, rotationY, rotationZ);
         calculateAffineTransformMatrix();
     }
@@ -244,7 +245,7 @@ public class AffineTransform {
         calculateAffineTransformMatrix();
     }
 
-    public void setTranslation(float translationX, float translationY, float translationZ){
+    public void setTranslation(float translationX, float translationY, float translationZ) {
         scale.setAll(translationX, translationY, translationZ);
         calculateAffineTransformMatrix();
     }

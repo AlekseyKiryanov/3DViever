@@ -3,41 +3,55 @@ package com.cgvsu.render_engine.light;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.paint.Color;
 
-public class SpecularLight implements Light {
+public class SpecularLight extends Light {
+
+    private int specColor = 0xFFFFFFFF;
+
     @Override
-    public Color setLight(Vector3D light, Vector3D defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
+    public void setSpecColor(int specColor) {
+        this.specColor = specColor;
+    }
 
+    @Override
+    public void setReflectionColor(int color) {
 
-        Vector3D N = new Vector3D(0, 0, 0);
-        N.addThis(n1.multiply(alpha));
-        N.addThis(n2.multiply(beta));
-        N.addThis(n3.multiply(gama));
+    }
 
-        N = N.normalize();
-        N.multiplyThis(-1);
+    @Override
+    public int setLight(Vector3D light, Vector3D eyes, int defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
+        Vector3D N = calcNormal(alpha, beta, gama, n1, n2, n3);
         Vector3D L = light.normalize();
-        Vector3D V = light.normalize();
-        Vector3D R = N.multiply(2 * V.dotProduct(N)).subtract(V);
+        Vector3D V = eyes.normalize();
 
-        Vector3D specColor = new Vector3D(1, 1, 1);
-
-
-
-
-
-
-        float specPower = 5.0F;
-        specColor.multiplyThis((float) Math.pow(Float.max(L.dotProduct(R), 0), specPower));
-
-
-
-        float k = 0.4F;
-        float l = -1 * light.dotProduct(N);
+        float l = light.dotProduct(N);
         l = Math.min(1, Math.max(l, 0));
-        float m = (1 - k) + k * l;
+        float d = (1 - k) + k * l;
+
+        float specPower = 8.0F;
+        Vector3D R = N.multiply(2 * V.dotProduct(N)).subtract(V);
+        float s = (float) Math.pow(Float.max(L.dotProduct(R), 0), specPower);
 
 
+        int b_d = (defColor) & 0xFF;
+        int g_d = (defColor >> 8) & 0xFF;
+        int r_d = (defColor >> 16) & 0xFF;
+        int a_d = defColor & 0xFF000000;
 
-        return Color.color(Math.min(1, Math.max(specColor.get(0) + defColor.get(0)*m, 0)), Math.min(1, Math.max(specColor.get(1)+ defColor.get(1)*m, 0)), Math.min(1, Math.max(specColor.get(2)+ defColor.get(2)*m, 0))); //diffColor.get(0), diffColor.get(1), diffColor.get(2));
+        int b_s = (specColor) & 0xFF;
+        int g_s = (specColor >> 8) & 0xFF;
+        int r_s = (specColor >> 16) & 0xFF;
+        int a_s = specColor & 0xFF000000;
+
+        int b = Integer.min(255, (int) (b_d * d + b_s * s));
+        int g = Integer.min(255, (int) (g_d * d + g_s * s));
+        int r = Integer.min(255, (int) (r_d * d + r_s * s));
+
+        r = (r << 16) & 0x00FF0000;
+        g = (g << 8) & 0x0000FF00;
+        b = b & 0x000000FF;
+
+        return a_d | r | g | b;
+
+
     }
 }

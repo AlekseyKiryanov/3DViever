@@ -13,11 +13,11 @@ public class RenderEngine {
 
     private final static SimpleConsoleLogger log = SimpleConsoleLogger.getInstance();
 
-    private final RenderFactory renderFactory = new RenderFactory();
+    private final RenderFactory renderFactory = RenderFactory.getInstance();
 
     private final Rasterization painter = Rasterization.getInstance();
 
-    private Render render = renderFactory.createRender(RenderType.NO_MESH);
+    private Render render = renderFactory.createRender(RenderType.TEXTURE);
 
 
     public void setRender(RenderType type) {

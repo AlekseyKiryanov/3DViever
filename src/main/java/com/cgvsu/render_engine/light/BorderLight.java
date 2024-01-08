@@ -3,39 +3,62 @@ package com.cgvsu.render_engine.light;
 import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.paint.Color;
 
-public class BorderLight implements Light {
+public class BorderLight extends Light {
+
+    private int specColor = 0xFFFFFFFF;
+
+    private int rimmColor = 0xFFFFFFFF;
     @Override
-    public Color setLight(Vector3D light, Vector3D defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
+    public int  setLight(Vector3D light, Vector3D eyes, int defColor, float alpha, float beta, float gama, Vector3D n1, Vector3D n2, Vector3D n3) {
 
-        Vector3D N = new Vector3D(0, 0, 0);
-        N.addThis(n1.multiply(  Math.abs(alpha)));
-        N.addThis(n2.multiply(Math.abs(beta)));
-        N.addThis(n3.multiply(Math.abs(gama)));
-
-        N = N.normalize();
-        N.multiplyThis(-1);
+        Vector3D N = calcNormal(alpha, beta, gama, n1, n2, n3);
         Vector3D L = light.normalize();
-        Vector3D V = light.normalize();
-        Vector3D R = N.multiply(2 * V.dotProduct(N)).subtract(V);
+        Vector3D V = eyes.normalize();
 
-        Vector3D specColor = new Vector3D(1, 1, 1);
-
+        float l = light.dotProduct(N);
+        l = Math.min(1, Math.max(l, 0));
+        float diff = (1 - k) + k * l;
 
         float specPower = 8.0F;
-        specColor.multiplyThis((float) Math.pow(Float.max(L.dotProduct(R), 0), specPower));
-        float rimPower = 8.0F;
+        Vector3D R = N.multiply(2 * V.dotProduct(N)).subtract(V);
+        float spec = (float) Math.pow(Float.max(L.dotProduct(R), 0), specPower);
+
+        float rimPower = 5.0F;
         float biass = 0.3F;
-        Vector3D rimColor = new Vector3D(1, 1, 1);
-        N.multiplyThis(-1);
-        rimColor.multiplyThis((float) Math.pow(1 + biass - Float.max(N.dotProduct(V), 0), rimPower));
-        specColor.addThis(rimColor);
+        float rimm = (float) Math.pow(1 + biass - Float.max(N.dotProduct(V), 0), rimPower);
 
-        float k = 0.4F;
-        float l = -1 * light.dotProduct(N);
-        l = Math.min(1, Math.max(l, 0));
-        float m = (1 - k) + k * l;
+        int b_diff = (defColor) & 0xFF;
+        int g_diff = (defColor >> 8) & 0xFF;
+        int r_diff = (defColor >> 16) & 0xFF;
+        int a_diff = defColor & 0xFF000000;
 
+        int b_spec = (specColor) & 0xFF;
+        int g_spec = (specColor >> 8) & 0xFF;
+        int r_spec = (specColor >> 16) & 0xFF;
+        int a_spec = specColor & 0xFF000000;
 
-        return Color.color(Math.min(1, Math.max(specColor.get(0) + defColor.get(0) * m, 0)), Math.min(1, Math.max(specColor.get(1) + defColor.get(1) * m, 0)), Math.min(1, Math.max(specColor.get(2) + defColor.get(2) * m, 0))); //diffColor.get(0), diffColor.get(1), diffColor.get(2));
+        int b_rimm = (rimmColor) & 0xFF;
+        int g_rimm = (rimmColor >> 8) & 0xFF;
+        int r_rimm = (rimmColor >> 16) & 0xFF;
+        int a_rimm = rimmColor & 0xFF000000;
+
+        int b = Integer.min(255, (int) (b_diff * diff + b_spec * spec + b_rimm * rimm));
+        int g = Integer.min(255, (int) (g_diff * diff + g_spec * spec + g_rimm * rimm));
+        int r = Integer.min(255, (int) (r_diff * diff + r_spec * spec + r_rimm * rimm));
+
+        r = (r << 16) & 0x00FF0000;
+        g = (g << 8) & 0x0000FF00;
+        b = b & 0x000000FF;
+
+        return a_diff | r | g | b;}
+
+    @Override
+    public void setSpecColor(int color) {
+        this.specColor = color;
+    }
+
+    @Override
+    public void setReflectionColor(int color) {
+        this.rimmColor = color;
     }
 }
