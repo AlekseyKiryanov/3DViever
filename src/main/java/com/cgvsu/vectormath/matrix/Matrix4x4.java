@@ -229,9 +229,9 @@ public class Matrix4x4 {
 
         float[][] matrix =
                 {
-                        {(float) resultX.get(0), (float) resultY.get(0), (float) resultZ.get(0), 0},
-                        {(float) resultX.get(1), (float) resultY.get(1), (float) resultZ.get(1), 0},
-                        {(float) resultX.get(2), (float) resultY.get(2), (float) resultZ.get(2), 0},
+                        {resultX.get(0), resultY.get(0), resultZ.get(0), 0},
+                        {resultX.get(1), resultY.get(1), resultZ.get(1), 0},
+                        {resultX.get(2), resultY.get(2), resultZ.get(2), 0},
                         {-resultX.dotProduct(eye), -resultY.dotProduct(eye), -resultZ.dotProduct(eye), 1}};
         return new Matrix4x4(matrix);
     }
