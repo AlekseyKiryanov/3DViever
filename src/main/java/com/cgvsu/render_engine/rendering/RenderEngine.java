@@ -8,6 +8,7 @@ import com.cgvsu.vectormath.matrix.Matrix4x4;
 
 import com.cgvsu.model.Model;
 
+import static com.cgvsu.vectormath.matrix.Matrix4x4.multMatrix4x4OnVector3D;
 import static com.cgvsu.vectormath.matrix.Matrix4x4.rotateScaleTranslate;
 
 public class RenderEngine {
@@ -37,6 +38,6 @@ public class RenderEngine {
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiply(viewMatrix);
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiply(projectionMatrix);
 
-        render.render(modelViewProjectionMatrix, mesh, width, height, painter);
+        render.render(modelViewProjectionMatrix.transpose(), mesh, width, height, painter);
     }
 }

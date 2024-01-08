@@ -3,8 +3,6 @@ package com.cgvsu.render_engine.camera;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
 
-import javax.vecmath.Vector3f;
-
 import static com.cgvsu.vectormath.matrix.Matrix4x4.*;
 
 public class Camera {
@@ -59,10 +57,6 @@ public class Camera {
 
     public void movePosition(final Vector3D translation) {
         this.position.addThis(translation);
-    }
-
-    public void moveTarget(final Vector3f translation) {
-        this.target.addThis(target);
     }
 
     public Matrix4x4 getViewMatrix() {

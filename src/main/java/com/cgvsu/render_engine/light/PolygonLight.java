@@ -16,9 +16,7 @@ public class PolygonLight extends Light {
 
         light = light.normalize();
 
-        float l = light.dotProduct(N);
-        l = Math.min(1, Math.max(l, 0));
-        float m = (1 - k) + k * l;
+        float m = diffColor(light, N);
 
 
         int b = (defColor) & 0xFF;

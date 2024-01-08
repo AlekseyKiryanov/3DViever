@@ -23,14 +23,8 @@ public class SpecularLight extends Light {
         Vector3D L = light.normalize();
         Vector3D V = eyes.normalize();
 
-        float l = light.dotProduct(N);
-        l = Math.min(1, Math.max(l, 0));
-        float d = (1 - k) + k * l;
-
-        float specPower = 8.0F;
-        Vector3D R = N.multiply(2 * V.dotProduct(N)).subtract(V);
-        float s = (float) Math.pow(Float.max(L.dotProduct(R), 0), specPower);
-
+        float d = diffColor(L, N);
+        float s = specColor(L, N, V);
 
         int b_d = (defColor) & 0xFF;
         int g_d = (defColor >> 8) & 0xFF;

@@ -15,17 +15,9 @@ public class BorderLight extends Light {
         Vector3D L = light.normalize();
         Vector3D V = eyes.normalize();
 
-        float l = light.dotProduct(N);
-        l = Math.min(1, Math.max(l, 0));
-        float diff = (1 - k) + k * l;
-
-        float specPower = 8.0F;
-        Vector3D R = N.multiply(2 * V.dotProduct(N)).subtract(V);
-        float spec = (float) Math.pow(Float.max(L.dotProduct(R), 0), specPower);
-
-        float rimPower = 5.0F;
-        float biass = 0.3F;
-        float rimm = (float) Math.pow(1 + biass - Float.max(N.dotProduct(V), 0), rimPower);
+        float diff = diffColor(L, N);
+        float spec = specColor(L, N, V);
+        float rimm = rimmColor(N, V);
 
         int b_diff = (defColor) & 0xFF;
         int g_diff = (defColor >> 8) & 0xFF;

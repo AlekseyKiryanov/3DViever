@@ -41,8 +41,7 @@ import com.cgvsu.obj_reader.ObjReader;
 import javafx.animation.AnimationTimer;
 
 public class GuiController {
-
-    final private int RELOAD_MILLISECONDS = 50;
+    final private int RELOAD_MILLISECONDS = 100;
     private long lastTime = 0;
     @FXML
     AnchorPane anchorPane;

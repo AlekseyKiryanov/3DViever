@@ -1,0 +1,4 @@
+--patch-module
+com.cgvsu=_
+--add-reads
+com.cgvsu=ALL-UNNAMED
