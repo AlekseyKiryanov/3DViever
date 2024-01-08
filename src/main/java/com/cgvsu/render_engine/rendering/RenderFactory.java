@@ -1,7 +1,5 @@
 package com.cgvsu.render_engine.rendering;
 
-import com.cgvsu.render_engine.rasterization.Rasterization;
-
 import java.util.EnumMap;
 import java.util.Map;
 

@@ -5,7 +5,6 @@ import com.cgvsu.model.Model;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector3D;
 
-import java.util.ArrayList;
 
 import static com.cgvsu.vectormath.matrix.Matrix4x4.multMatrix4x4OnVector3D;
 
@@ -13,9 +12,9 @@ public class AffineTransform {
 
     private RotationOrder rotationOrder = RotationOrder.ZYX;
 
-    private Vector3D translation = new Vector3D(0, 0, 0);
-    private Vector3D rotation = new Vector3D(0, 0, 0);
-    private Vector3D scale = new Vector3D(1, 1, 1);
+    private final Vector3D translation = new Vector3D(0, 0, 0);
+    private final Vector3D rotation = new Vector3D(0, 0, 0);
+    private final Vector3D scale = new Vector3D(1, 1, 1);
 
     private Matrix4x4 RotationMatrix = new Matrix4x4(1, 0, 0, 0,
             0, 1, 0, 0,

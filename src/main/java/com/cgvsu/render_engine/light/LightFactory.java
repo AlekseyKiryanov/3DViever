@@ -1,7 +1,5 @@
 package com.cgvsu.render_engine.light;
 
-import com.cgvsu.render_engine.rendering.*;
-import javafx.scene.paint.Color;
 
 import java.util.EnumMap;
 import java.util.Map;

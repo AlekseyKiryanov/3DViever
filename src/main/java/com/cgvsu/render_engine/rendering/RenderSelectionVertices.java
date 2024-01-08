@@ -4,13 +4,11 @@ import com.cgvsu.logger.SimpleConsoleLogger;
 import com.cgvsu.model.Model;
 import com.cgvsu.render_engine.rasterization.Rasterization;
 import com.cgvsu.render_engine.rasterization.TriangleSelfColored;
-import com.cgvsu.render_engine.rasterization.TriangleVerteces;
-import com.cgvsu.render_engine.rasterization.TriangleTextured;
+import com.cgvsu.render_engine.rasterization.TriangleVertices;
 import com.cgvsu.vectormath.matrix.Matrix4x4;
 import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;
 import com.cgvsu.vectormath.vector.Vector4D;
-import javafx.scene.paint.Color;
 
 import java.util.HashSet;
 
@@ -19,11 +17,10 @@ import static com.cgvsu.vectormath.vector.Vector3D.vertexToPoint;
 
 public class RenderSelectionVertices implements Render {
     private final static SimpleConsoleLogger log = SimpleConsoleLogger.getInstance();
-    private final Rasterization painter = Rasterization.getInstance();
 
     @Override
     public void render(Matrix4x4 modelViewProjectionMatrix, Model mesh, int width, int height, Rasterization painter) {
-        HashSet<TriangleVerteces> triangles = new HashSet<>();
+        HashSet<TriangleVertices> triangles = new HashSet<>();
         painter.resetPolygonBuffer();
 
         final int nPolygons = mesh.polygons.size();
@@ -54,7 +51,7 @@ public class RenderSelectionVertices implements Render {
 
 
             if (log.isLoggable(System.Logger.Level.TRACE)) {
-                log.log(System.Logger.Level.TRACE, "Treangle " + polygonInd + " A=" + resultPoint1 + " B=" + resultPoint2 + " C=" + resultPoint3);
+                log.log(System.Logger.Level.TRACE, "Triangle " + polygonInd + " A=" + resultPoint1 + " B=" + resultPoint2 + " C=" + resultPoint3);
             }
 
 
@@ -64,7 +61,7 @@ public class RenderSelectionVertices implements Render {
                     mesh.getSelfColor()));
 
 
-            triangles.add(new TriangleVerteces(resultPoint1, resultPoint2, resultPoint3, z1, z2, z3,
+            triangles.add(new TriangleVertices(resultPoint1, resultPoint2, resultPoint3, z1, z2, z3,
                     mesh.polygons.get(polygonInd).getVertexIndices().get(0),
                     mesh.polygons.get(polygonInd).getVertexIndices().get(1),
                     mesh.polygons.get(polygonInd).getVertexIndices().get(2)));

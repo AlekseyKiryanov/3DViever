@@ -1,10 +1,8 @@
 package com.cgvsu.editing_model;
 
 import com.cgvsu.model.Model;
-import com.cgvsu.model.Polygon;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Stack;
 
 public class Deletion {
@@ -28,12 +26,12 @@ public class Deletion {
     }
 
 
-    public void deleteVerteces(Model model, ArrayList<Integer> verteces) {
+    public void deleteVertices(Model model, ArrayList<Integer> vertices) {
         oldModels.add(model.copy());
 
-        verteces.sort(Integer::compareTo);
-        for (int i = verteces.size() - 1; i >= 0; i--) {
-            deleteVertex(model, verteces.get(i));
+        vertices.sort(Integer::compareTo);
+        for (int i = vertices.size() - 1; i >= 0; i--) {
+            deleteVertex(model, vertices.get(i));
         }
     }
 
