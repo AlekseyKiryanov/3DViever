@@ -1,6 +1,10 @@
 package com.cgvsu.vectormath.matrix;
 
+import com.cgvsu.vectormath.vector.Vector3D;
 import com.cgvsu.vectormath.vector.Vector4D;
+
+import static com.cgvsu.vectormath.matrix.Matrix4x4.multMatrix4x4OnVector3D;
+import static com.cgvsu.vectormath.matrix.Matrix4x4.multiplyMatrix4ByVector3DWithW;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.testng.annotations.Test;
@@ -83,6 +87,45 @@ public class Matrix4x4Test {
         assertEquals(4, result.get(1), 0.01);
         assertEquals(6, result.get(2), 0.01);
         assertEquals(8, result.get(3), 0.01);
+    }
+    @Test
+    public void testMatrixOnVector3DMultiplication() {
+        float[][] matrixData = {
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {1, 2, 3, 4},
+                {5, 6, 7, 8}
+        };
+        Matrix4x4 matrix = new Matrix4x4(matrixData);
+
+        float[] vectorData = {1, 2, 3};
+        Vector3D vector = new Vector3D(vectorData[0], vectorData[1],vectorData[2]);
+
+        Vector3D result = multMatrix4x4OnVector3D(matrix, vector);
+
+        assertEquals(18, result.get(0), 0.01);
+        assertEquals(46, result.get(1), 0.01);
+        assertEquals(18, result.get(2), 0.01);
+    }
+    @Test
+    public void testMatrixByVector3DMultiplication() {
+        float[][] matrixData = {
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {1, 2, 3, 4},
+                {5, 6, 7, 8}
+        };
+        Matrix4x4 matrix = new Matrix4x4(matrixData);
+
+        float[] vectorData = {1, 2, 3};
+        Vector3D vector = new Vector3D(vectorData[0], vectorData[1],vectorData[2]);
+
+        Vector4D result = multiplyMatrix4ByVector3DWithW(matrix, vector);
+        final float w = ((vector.get(0) * matrix.getElem(3,0)) + (vector.get(1) * matrix.getElem(3, 1)) + (vector.get(2) * matrix.getElem(3, 2)) + matrix.getElem(3, 3));
+
+        assertEquals(18/w, result.get(0), 0.01);
+        assertEquals(46/w, result.get(1), 0.01);
+        assertEquals(18/w, result.get(2), 0.01);
     }
 
     @Test

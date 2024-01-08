@@ -9,7 +9,7 @@ import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;
 import com.cgvsu.vectormath.vector.Vector4D;
 
-import static com.cgvsu.vectormath.matrix.Matrix4x4.multiplyMatrix4ByVector3;
+import static com.cgvsu.vectormath.matrix.Matrix4x4.multiplyMatrix4ByVector3DWithW;
 import static com.cgvsu.vectormath.vector.Vector3D.vertexToPoint;
 
 public class RenderTexture implements Render {
@@ -23,7 +23,7 @@ public class RenderTexture implements Render {
         mesh.polygons.forEach(polygon -> {
 
             Vector3D vertex1 = mesh.vertices.get(polygon.getVertexIndices().get(0));
-            Vector4D vertex1M = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex1);
+            Vector4D vertex1M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex1);
 
             Vector2D resultPoint1 = vertexToPoint(vertex1M, width, height);
             float realZ1 = vertex1M.get(3);
@@ -39,7 +39,7 @@ public class RenderTexture implements Render {
 
 
             Vector3D vertex2 = mesh.vertices.get(polygon.getVertexIndices().get(1));
-            Vector4D vertex2M = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex2);
+            Vector4D vertex2M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex2);
 
             Vector2D resultPoint2 = vertexToPoint(vertex2M, width, height);
             float realZ2 = vertex2M.get(3);
@@ -55,7 +55,7 @@ public class RenderTexture implements Render {
 
 
             Vector3D vertex3 = mesh.vertices.get(polygon.getVertexIndices().get(2));
-            Vector4D vertex3M = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex3);
+            Vector4D vertex3M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex3);
 
             Vector2D resultPoint3 = vertexToPoint(vertex3M, width, height);
             float realZ3 = vertex3M.get(3);

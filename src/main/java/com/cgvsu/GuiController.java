@@ -799,20 +799,20 @@ public class GuiController {
         showTextureCheck.setSelected(activeModel.isShowTexture());
 
         switch (activeModel.getRenderType()) {
-            case TEXTURE, SELECTION_VERTICES -> {
+            case TEXTURE, SELF_COLORED -> {
                 noMeshRadioMenuItem.setSelected(true);
                 selectionVerticesRadioMenuItem.setSelected(false);
                 selectionPolygonsRadioMenuItem.setSelected(false);
             }
             case SELECTION_POLYGONS -> {
                 noMeshRadioMenuItem.setSelected(false);
-                selectionVerticesRadioMenuItem.setSelected(true);
-                selectionPolygonsRadioMenuItem.setSelected(false);
-            }
-            case SELF_COLORED -> {
-                noMeshRadioMenuItem.setSelected(false);
                 selectionVerticesRadioMenuItem.setSelected(false);
                 selectionPolygonsRadioMenuItem.setSelected(true);
+            }
+            case SELECTION_VERTICES -> {
+                noMeshRadioMenuItem.setSelected(false);
+                selectionVerticesRadioMenuItem.setSelected(true);
+                selectionPolygonsRadioMenuItem.setSelected(false);
             }
             default -> {
 

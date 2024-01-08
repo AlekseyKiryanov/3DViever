@@ -234,14 +234,13 @@ public class Matrix4x4 {
                         {(float) resultX.get(2), (float) resultY.get(2), (float) resultZ.get(2), 0},
                         {-resultX.dotProduct(eye), -resultY.dotProduct(eye), -resultZ.dotProduct(eye), 1}};
         return new Matrix4x4(matrix);
-        // trans
     }
 
-    public static Vector4D multiplyMatrix4ByVector3(final Matrix4x4 matrix, final Vector3D vertex) {
-        final float x = (float) ((vertex.get(0) * matrix.getElem(0, 0)) + (vertex.get(1) * matrix.getElem(1, 0)) + (vertex.get(2) * matrix.getElem(2, 0)) + matrix.getElem(3, 0));
-        final float y = (float) ((vertex.get(0) * matrix.getElem(0, 1)) + (vertex.get(1) * matrix.getElem(1, 1)) + (vertex.get(2) * matrix.getElem(2, 1)) + matrix.getElem(3, 1));
-        final float z = (float) ((vertex.get(0) * matrix.getElem(0, 2)) + (vertex.get(1) * matrix.getElem(1, 2)) + (vertex.get(2) * matrix.getElem(2, 2)) + matrix.getElem(3, 2));
-        final float w = (float) ((vertex.get(0) * matrix.getElem(0, 3)) + (vertex.get(1) * matrix.getElem(1, 3)) + (vertex.get(2) * matrix.getElem(2, 3)) + matrix.getElem(3, 3));
+    public static Vector4D multiplyMatrix4ByVector3DWithW(final Matrix4x4 matrix, final Vector3D vertex) {
+        final float x = ((vertex.get(0) * matrix.getElem(0,0)) + (vertex.get(1) * matrix.getElem(0, 1)) + (vertex.get(2) * matrix.getElem(0, 2)) + matrix.getElem(0, 3));
+        final float y = ((vertex.get(0) * matrix.getElem(1,0)) + (vertex.get(1) * matrix.getElem(1, 1)) + (vertex.get(2) * matrix.getElem(1, 2)) + matrix.getElem(1, 3));
+        final float z = ((vertex.get(0) * matrix.getElem(2,0)) + (vertex.get(1) * matrix.getElem(2, 1)) + (vertex.get(2) * matrix.getElem(2, 2)) + matrix.getElem(2, 3));
+        final float w = ((vertex.get(0) * matrix.getElem(3,0)) + (vertex.get(1) * matrix.getElem(3, 1)) + (vertex.get(2) * matrix.getElem(3, 2)) + matrix.getElem(3, 3));
         return new Vector4D(x / w, y / w, z / w, w);
     }
 

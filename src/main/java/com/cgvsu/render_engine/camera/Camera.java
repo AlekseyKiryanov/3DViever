@@ -76,13 +76,13 @@ public class Camera {
     public void handleMouseInput(double x, double y, boolean isPrimaryButtonDown, boolean isSecondaryButtonDown) {
 
         if (isPrimaryButtonDown) {
-    // Вращение камеры вокруг объекта при зажатой левой кнопке мыши
+            // Вращение камеры вокруг объекта при зажатой левой кнопке мыши
             rotateCamera((float) (x - mousePosX), (float) (y - mousePosY));
         } else if (isSecondaryButtonDown) {
-    // Передвижение камеры влево/вправо при зажатой правой кнопке мыши
-            movePosition(new Vector3D((float) (x - mousePosX) * 0.1f, (float) (+y - mousePosY) * 0.1f, 0));
+            // Передвижение камеры влево/вправо при зажатой правой кнопке мыши
+            movePosition(new Vector3D((float) (x - mousePosX) * 0.1f, (float) (y - mousePosY) * 0.1f, 0));
         } else {
-    // Передвижение камеры в зависимости от движения колесика мыши
+            // Передвижение камеры в зависимости от движения колесика мыши
             if (mouseDeltaY > 0) {
                 position.subtractThis((position.subtract(target).divide(75)));
             } else if (mouseDeltaY < 0) {
@@ -104,11 +104,14 @@ public class Camera {
 
         Matrix4x4 rotationMatrix = rotationMatrixX.multiply(rotationMatrixY);
 
-        position = multiplyMatrix4ByVector3(rotationMatrix, position).toVector3D();
+
+        position = multiplyMatrix4ByVector3DWithW(rotationMatrix, position).toVector3D();
     }
 
     @Override
     public String toString() {
-        return String.format("Камера %d {%.2f;  %.2f; %.2f}" , number, position.get(0), position.get(1), position.get(2));
+        return String.format("Камера %d {%.2f;  %.2f; %.2f}", number, position.get(0), position.get(1), position.get(2));
+
+
     }
 }
