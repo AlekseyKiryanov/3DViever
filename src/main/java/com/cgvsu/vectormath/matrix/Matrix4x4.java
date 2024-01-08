@@ -185,15 +185,6 @@ public class Matrix4x4 {
         return (matrix[0][0] * m1.determinate() - matrix[0][1] * m2.determinate() + matrix[0][2] * m3.determinate() - matrix[0][3] * m4.determinate());
     }
 
-    public static Matrix4x4 rotateScaleTranslate() {
-        float[][] matrix = {
-                {1, 0, 0, 0},
-                {0, 1, 0, 0},
-                {0, 0, 1, 0},
-                {0, 0, 0, 1}};
-        return new Matrix4x4(matrix);
-    }
-
     public static Matrix4x4 rotate(float angle, float axisX, float axisY, float axisZ) {
         float radians = (float) Math.toRadians(angle);
         float sin = (float) Math.sin(radians);

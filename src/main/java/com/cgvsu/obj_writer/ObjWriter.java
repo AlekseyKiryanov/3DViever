@@ -23,7 +23,7 @@ public class ObjWriter {
             for (Vector2D textureVertex : model.textureVertices) {
                 fw.write(String.format("vt %.4f %.4f%n", textureVertex.get(0), textureVertex.get(1)));
             }
-            fw.write(String.format("# %d texture coords%n%n", model.textureVertices.size()));
+            fw.write(String.format("# %d texture cords%n%n", model.textureVertices.size()));
 
             for (Vector3D normal : model.normals) {
                 fw.write(String.format("vn %.4f %.4f %.4f%n", normal.get(0), normal.get(1), normal.get(2)));

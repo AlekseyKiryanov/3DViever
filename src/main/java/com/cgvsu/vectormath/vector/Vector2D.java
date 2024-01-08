@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Vector2D{
     private float x;
     private float y;
-    private static float eps = 1e-4f;
+    private static final float eps = 1e-4f;
 
     public Vector2D(float x, float y) {
         this.x = x;

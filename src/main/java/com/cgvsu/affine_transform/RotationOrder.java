@@ -6,6 +6,6 @@ public enum RotationOrder {
     YZX,
     YXZ,
     XZY,
-    XYZ;
+    XYZ
 
 }

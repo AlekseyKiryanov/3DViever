@@ -1,7 +1,6 @@
 package com.cgvsu.render_engine.light;
 
 import com.cgvsu.vectormath.vector.Vector3D;
-import javafx.scene.paint.Color;
 
 public class BorderLight extends Light {
 
@@ -27,12 +26,10 @@ public class BorderLight extends Light {
         int b_spec = (specColor) & 0xFF;
         int g_spec = (specColor >> 8) & 0xFF;
         int r_spec = (specColor >> 16) & 0xFF;
-        int a_spec = specColor & 0xFF000000;
 
         int b_rimm = (rimmColor) & 0xFF;
         int g_rimm = (rimmColor >> 8) & 0xFF;
         int r_rimm = (rimmColor >> 16) & 0xFF;
-        int a_rimm = rimmColor & 0xFF000000;
 
         int b = Integer.min(255, (int) (b_diff * diff + b_spec * spec + b_rimm * rimm));
         int g = Integer.min(255, (int) (g_diff * diff + g_spec * spec + g_rimm * rimm));

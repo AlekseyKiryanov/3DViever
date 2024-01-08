@@ -38,8 +38,6 @@ import com.cgvsu.model.Model;
 import com.cgvsu.obj_reader.ObjReader;
 
 
-import javafx.animation.AnimationTimer;
-
 public class GuiController {
     final private int RELOAD_MILLISECONDS = 100;
     private long lastTime = 0;
@@ -448,46 +446,13 @@ public class GuiController {
         }
     }
 
-    private void startRotationAnimation() {
-        if (!isAutoRotate) {
-            isAutoRotate = true;
-        } else {
-            isAutoRotate = false;
-            lastTime = 0;
-        }
-        AnimationTimer rotationTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if (isAutoRotate) {
-                    if (lastTime != 0) {
-                        final double elapsedSeconds = (now - lastTime) / 1e9;
-
-                        final float rotateSpeed = 10;
-                        float rotateAngle = (float) (elapsedSeconds * rotateSpeed);
-
-                        applyTransformations(1, 1, 1, 0, rotateAngle, 0, 0, 0, 0);
-
-                    }
-                    lastTime = now;
-                } else {
-                    lastTime = 0;
-                }
-            }
-        };
-        if (isAutoRotate) {
-            rotationTimer.start();
-        } else {
-            rotationTimer.stop();
-        }
-    }
-
     @FXML
     private void onOpenModelMenuItemClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
 
-        File file = fileChooser.showOpenDialog((Stage) imageCanvas.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(imageCanvas.getScene().getWindow());
         if (file == null) {
             return;
         }
@@ -502,7 +467,7 @@ public class GuiController {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Изображение", List.of("*.png", "*.bmp", "*.jpg", "*.jpeg")));
             fileChooser.setTitle("Выбрать текстуру");
 
-            File file = fileChooser.showOpenDialog((Stage) imageCanvas.getScene().getWindow());
+            File file = fileChooser.showOpenDialog(imageCanvas.getScene().getWindow());
             if (file == null) {
                 return;
             }
@@ -709,7 +674,7 @@ public class GuiController {
     @FXML
     public void deleteVertices() {
         if (activeModel != null) {
-            deletion.deleteVerteces(activeModel, rasterization.getChosenVertexes());
+            deletion.deleteVertices(activeModel, rasterization.getChosenVertexes());
             rasterization.resetChooseVertices();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);

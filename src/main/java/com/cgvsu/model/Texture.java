@@ -1,15 +1,11 @@
 package com.cgvsu.model;
 
-import com.cgvsu.vectormath.vector.Vector3D;
 import javafx.scene.control.Alert;
-import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
 
 public class Texture {
     private final float EPS = 0.02F;

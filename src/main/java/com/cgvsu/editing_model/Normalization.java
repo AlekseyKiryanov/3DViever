@@ -23,7 +23,7 @@ public class Normalization {
         ansModel.polygons = new ArrayList<>(workingModel.polygons);
         ansModel.normals = new ArrayList<>();
 
-        ArrayListMultimap<Integer, Integer> vertecesAtPolygons = ArrayListMultimap.create();
+        ArrayListMultimap<Integer, Integer> verticesAtPolygons = ArrayListMultimap.create();
 
         int p = workingModel.polygons.size();
         for (int i = 0; i < p; i++) {
@@ -44,7 +44,7 @@ public class Normalization {
 
                 sumNormals = sumNormals.add(normal);
 
-                vertecesAtPolygons.put(workingModel.polygons.get(i).getVertexIndices().get(j), i);
+                verticesAtPolygons.put(workingModel.polygons.get(i).getVertexIndices().get(j), i);
 
             }
 
@@ -63,7 +63,7 @@ public class Normalization {
             int l = ansModel.polygons.get(i).getVertexIndices().size();
             for (int j = 0; j < l; j++) {
 
-                ArrayList<Integer> otherPolygons = new ArrayList<>(vertecesAtPolygons.get(ansModel.polygons.get(i).getVertexIndices().get(j)));
+                ArrayList<Integer> otherPolygons = new ArrayList<>(verticesAtPolygons.get(ansModel.polygons.get(i).getVertexIndices().get(j)));
                 int m = otherPolygons.size();
                 Vector3D sumNormals = new Vector3D(0, 0, 0);
                 int k = 0;

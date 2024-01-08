@@ -136,7 +136,6 @@ public class Triangulation {
 
             if (index > verticesCount * verticesCount * verticesCount * verticesCount) {
                 break;
-                //throw new BadPoligonException("неверный порядок обхода (перекрест ребер)", p.getLine());
             }
 
         }
