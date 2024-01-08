@@ -247,7 +247,7 @@ public class GuiController {
             for (Model model : modelsComboBox.getItems()) {
                 rasterization.setTexture(model.getTexture());
                 renderEngine.setRender(model.getRenderType());
-                renderEngine.render(activeCamera, model, (int) width, (int) height, affineTransform);
+                renderEngine.render(activeCamera, model, (int) width, (int) height);
                 a += model.vertices.size();
                 b += model.polygons.size();
             }
@@ -323,6 +323,20 @@ public class GuiController {
         affineTransform.setTranslationY(translateY);
         affineTransform.setTranslationZ(translateZ);
         activeModel = affineTransform.transformModel(activeModel);
+    }
+
+    private void applyTransformations2(float scaleX, float scaleY, float scaleZ, float rotateX, float rotateY, float rotateZ, float translateX, float translateY, float translateZ) {
+
+        affineTransform.setScaleX(scaleX);
+        affineTransform.setScaleY(scaleY);
+        affineTransform.setScaleZ(scaleZ);
+        affineTransform.setRotationX(rotateX);
+        affineTransform.setRotationY(rotateY);
+        affineTransform.setRotationZ(rotateZ);
+        affineTransform.setTranslationX(translateX);
+        affineTransform.setTranslationY(translateY);
+        affineTransform.setTranslationZ(translateZ);
+        renderEngine.setModelMatrix(affineTransform.getRotationMatrix());
     }
 
     @FXML
@@ -445,7 +459,7 @@ public class GuiController {
             alert.showAndWait();
         }
     }
-
+    
     @FXML
     private void onOpenModelMenuItemClick() {
         FileChooser fileChooser = new FileChooser();
@@ -506,7 +520,7 @@ public class GuiController {
         alert.setHeaderText("Чтобы выбрать текстуру сначала загрузите модель");
         alert.showAndWait();
     }
-
+    
     @FXML
     private void loadCube() {
         try {
@@ -727,7 +741,7 @@ public class GuiController {
         }
     }
 
-    private void setChecks(){
+    private void setChecks() {
         showTextureCheck.setSelected(activeModel.isShowTexture());
 
         switch (activeModel.getRenderType()) {

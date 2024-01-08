@@ -15,6 +15,15 @@ public class RenderEngine {
     private final Rasterization painter = Rasterization.getInstance();
     private Render render = renderFactory.createRender(RenderType.TEXTURE);
 
+    private Matrix4x4 modelMatrix = new Matrix4x4(1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1);
+
+    public void setModelMatrix(Matrix4x4 modelMatrix) {
+        this.modelMatrix = modelMatrix;
+    }
+
     public void setRender(RenderType type) {
         this.render = renderFactory.createRender(type);
     }
@@ -22,12 +31,12 @@ public class RenderEngine {
     public void render(
             final Camera camera,
             final Model mesh,
-            int width, int height, AffineTransform affineTransform) {
+            int width, int height) {
 
         if (log.isLoggable(System.Logger.Level.TRACE)) {
             log.log(System.Logger.Level.TRACE, "==Camera position: " + camera.getPosition() + "==");
         }
-        Matrix4x4 modelMatrix = affineTransform.getAffineTransformMatrix();
+        //Matrix4x4 modelMatrix = affineTransform.getAffineTransformMatrix();
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
 

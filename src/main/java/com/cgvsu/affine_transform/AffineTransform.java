@@ -89,9 +89,6 @@ public class AffineTransform {
                 0, -sinA, cosA, 0,
                 0, 0, 0, 1);
 
-        //Матрица аффинных преобразований принимается равной единице
-        AffineTransformMatrix = new Matrix4x4(TranslationMatrix.transpose());
-
         //Перемножение матриц поворота согласно их порядку
         switch (rotationOrder) {
             case ZYX -> {
@@ -127,12 +124,13 @@ public class AffineTransform {
             default -> RotationMatrix = RotationMatrix.multiply(1);
         }
         //Вычисление матрицы аффинных преобразований
+        AffineTransformMatrix = new Matrix4x4(ScaleMatrix);
         AffineTransformMatrix = AffineTransformMatrix.multiply(RotationMatrix);
-        AffineTransformMatrix = AffineTransformMatrix.multiply(ScaleMatrix);
+        AffineTransformMatrix = AffineTransformMatrix.multiply(TranslationMatrix);
     }
 
     public Vector3D transformVertex(Vector3D v) {
-        return Matrix4x4.multMatrix4x4OnVector3D(AffineTransformMatrix, v);
+        return Matrix4x4.multiplyMatrix4ByVector3DWithW(AffineTransformMatrix, v).toVector3D();
     }
 
 
