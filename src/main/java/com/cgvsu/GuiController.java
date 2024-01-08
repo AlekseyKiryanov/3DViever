@@ -495,6 +495,7 @@ public class GuiController {
         }
     }
 
+
     @FXML
     private void onOpenModelMenuItemClick() {
         FileChooser fileChooser = new FileChooser();
