@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.cgvsu.affine_transform.AffineTransformTest" time="0.053" tests="6" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.cgvsu.affine_transform.AffineTransformTest" time="0.048" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="20"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,14 +15,14 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="RU"/>
     <property name="sun.boot.library.path" value="C:\Users\Aleksei\.jdks\openjdk-20.0.2\bin"/>
-    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter C:\Users\Aleksei\AppData\Local\Temp\surefire5868043984181077257 2024-01-08T18-09-47_979-jvmRun1 surefire-20240108180949968_1tmp surefire_0-20240108180949968_2tmp"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter C:\Users\Aleksei\AppData\Local\Temp\surefire9909668535828785665 2024-01-08T18-29-05_345-jvmRun1 surefire-20240108182905716_1tmp surefire_0-20240108182905716_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Aleksei\IdeaProjects\GIT\3DViever\target\test-classes;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-controls\17.0.0.1\javafx-controls-17.0.0.1.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-graphics\17.0.0.1\javafx-graphics-17.0.0.1.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-base\17.0.0.1\javafx-base-17.0.0.1.jar;C:\Users\Aleksei\.m2\repository\com\levigo\gwt-awt\0.0.1\gwt-awt-0.0.1.jar;C:\Users\Aleksei\.m2\repository\com\google\gwt\gwt-user\2.5.0\gwt-user-2.5.0.jar;C:\Users\Aleksei\.m2\repository\javax\validation\validation-api\1.0.0.GA\validation-api-1.0.0.GA.jar;C:\Users\Aleksei\.m2\repository\javax\validation\validation-api\1.0.0.GA\validation-api-1.0.0.GA-sources.jar;C:\Users\Aleksei\.m2\repository\org\json\json\20090211\json-20090211.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-fxml\17.0.0.1\javafx-fxml-17.0.0.1.jar;C:\Users\Aleksei\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.8.1\junit-jupiter-engine-5.8.1.jar;C:\Users\Aleksei\.m2\repository\org\junit\platform\junit-platform-engine\1.8.1\junit-platform-engine-1.8.1.jar;C:\Users\Aleksei\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Aleksei\.m2\repository\com\google\code\findbugs\jsr305\3.0.2\jsr305-3.0.2.jar;C:\Users\Aleksei\.m2\repository\org\checkerframework\checker-compat-qual\2.0.0\checker-compat-qual-2.0.0.jar;C:\Users\Aleksei\.m2\repository\com\google\errorprone\error_prone_annotations\2.1.3\error_prone_annotations-2.1.3.jar;C:\Users\Aleksei\.m2\repository\com\google\j2objc\j2objc-annotations\1.1\j2objc-annotations-1.1.jar;C:\Users\Aleksei\.m2\repository\org\codehaus\mojo\animal-sniffer-annotations\1.14\animal-sniffer-annotations-1.14.jar;C:\Users\Aleksei\.m2\repository\commons-collections\commons-collections\3.2.2\commons-collections-3.2.2.jar;C:\Users\Aleksei\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.8.2\junit-jupiter-api-5.8.2.jar;C:\Users\Aleksei\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Aleksei\.m2\repository\org\junit\platform\junit-platform-commons\1.8.2\junit-platform-commons-1.8.2.jar;C:\Users\Aleksei\.m2\repository\org\testng\testng\7.1.0\testng-7.1.0.jar;C:\Users\Aleksei\.m2\repository\com\beust\jcommander\1.72\jcommander-1.72.jar;C:\Users\Aleksei\.m2\repository\com\google\inject\guice\4.1.0\guice-4.1.0-no_aop.jar;C:\Users\Aleksei\.m2\repository\javax\inject\javax.inject\1\javax.inject-1.jar;C:\Users\Aleksei\.m2\repository\aopalliance\aopalliance\1.0\aopalliance-1.0.jar;C:\Users\Aleksei\.m2\repository\org\yaml\snakeyaml\1.21\snakeyaml-1.21.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Aleksei"/>
     <property name="user.language" value="ru"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
-    <property name="jdk.module.path" value="C:\Users\Aleksei\IdeaProjects\GIT\3DViever\target\classes;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-controls\17.0.0.1\javafx-controls-17.0.0.1-win.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-graphics\17.0.0.1\javafx-graphics-17.0.0.1-win.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-base\17.0.0.1\javafx-base-17.0.0.1-win.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-fxml\17.0.0.1\javafx-fxml-17.0.0.1-win.jar;C:\Users\Aleksei\.m2\repository\java3d\vecmath\1.3.1\vecmath-1.3.1.jar;C:\Users\Aleksei\.m2\repository\com\google\guava\guava\25.1-android\guava-25.1-android.jar"/>
+    <property name="jdk.module.path" value="C:\Users\Aleksei\IdeaProjects\GIT\3DViever\target\classes;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-controls\17.0.0.1\javafx-controls-17.0.0.1-win.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-graphics\17.0.0.1\javafx-graphics-17.0.0.1-win.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-base\17.0.0.1\javafx-base-17.0.0.1-win.jar;C:\Users\Aleksei\.m2\repository\org\openjfx\javafx-fxml\17.0.0.1\javafx-fxml-17.0.0.1-win.jar;C:\Users\Aleksei\.m2\repository\com\google\guava\guava\25.1-android\guava-25.1-android.jar"/>
     <property name="java.version.date" value="2023-07-18"/>
     <property name="java.home" value="C:\Users\Aleksei\.jdks\openjdk-20.0.2"/>
     <property name="file.separator" value="\"/>
@@ -60,10 +60,10 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="64.0"/>
   </properties>
-  <testcase name="transformVertex01" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0.025"/>
-  <testcase name="transformVertex02" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0.006"/>
+  <testcase name="transformVertex01" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0.024"/>
+  <testcase name="transformVertex02" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0.002"/>
   <testcase name="transformVertex03" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0.001"/>
   <testcase name="transformVertex04" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0.001"/>
-  <testcase name="transformVertex02a" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0"/>
-  <testcase name="transformVertex04a" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0"/>
+  <testcase name="transformVertex02a" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0.001"/>
+  <testcase name="transformVertex04a" classname="com.cgvsu.affine_transform.AffineTransformTest" time="0.001"/>
 </testsuite>
