@@ -6,7 +6,7 @@ import com.cgvsu.vectormath.vector.Vector4D;
 
 import java.util.Arrays;
 
-public class Matrix4x4{
+public class Matrix4x4 {
     private float[][] matrix = new float[4][4];
 
     public Matrix4x4(float[][] data) {
@@ -15,10 +15,12 @@ public class Matrix4x4{
         }
         this.matrix = data;
     }
+
     public Matrix4x4(Matrix4x4 matrix4x4) {
 
         this.matrix = matrix4x4.getMatrix();
     }
+
     public Matrix4x4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44) {
         matrix[0][0] = m11;
         matrix[0][1] = m12;
@@ -42,11 +44,11 @@ public class Matrix4x4{
         return matrix;
     }
 
-    public void setElem(int indX, int indY, float value){
+    public void setElem(int indX, int indY, float value) {
         matrix[indX][indY] = value;
     }
 
-    public float getElem(int indX, int indY){
+    public float getElem(int indX, int indY) {
         return matrix[indX][indY];
     }
 
@@ -143,33 +145,34 @@ public class Matrix4x4{
         };
         return new Matrix4x4(zeroMatrix);
     }
-    public float determinate(){
+
+    public float determinate() {
         float[][] data1 = new float[3][3];
         float[][] data2 = new float[3][3];
         float[][] data3 = new float[3][3];
         float[][] data4 = new float[3][3];
 
-        for(int i = 1; i < 4; i++){
-            for(int j = 0; j < 4; j++){
-                if (j != 0){
-                    data1[i-1][j-1] = matrix[i][j];
+        for (int i = 1; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (j != 0) {
+                    data1[i - 1][j - 1] = matrix[i][j];
                 }
-                if (j != 1){
-                    if (j==0) {
-                        data2[i-1][j] = matrix[i][j];
-                    }else{
-                        data2[i-1][j-1] = matrix[i][j];
+                if (j != 1) {
+                    if (j == 0) {
+                        data2[i - 1][j] = matrix[i][j];
+                    } else {
+                        data2[i - 1][j - 1] = matrix[i][j];
                     }
                 }
-                if (j != 2){
-                    if (j==0 || j==1) {
-                        data3[i-1][j] = matrix[i][j];
-                    }else{
-                        data3[i-1][j-1] = matrix[i][j];
+                if (j != 2) {
+                    if (j == 0 || j == 1) {
+                        data3[i - 1][j] = matrix[i][j];
+                    } else {
+                        data3[i - 1][j - 1] = matrix[i][j];
                     }
                 }
-                if (j != 3){
-                    data4[i-1][j] = matrix[i][j];
+                if (j != 3) {
+                    data4[i - 1][j] = matrix[i][j];
                 }
             }
         }
@@ -179,8 +182,9 @@ public class Matrix4x4{
         Matrix3x3 m3 = new Matrix3x3(data3);
         Matrix3x3 m4 = new Matrix3x3(data4);
 
-        return (matrix[0][0]*m1.determinate()-matrix[0][1]*m2.determinate()+matrix[0][2]*m3.determinate()-matrix[0][3]*m4.determinate());
+        return (matrix[0][0] * m1.determinate() - matrix[0][1] * m2.determinate() + matrix[0][2] * m3.determinate() - matrix[0][3] * m4.determinate());
     }
+
     public static Matrix4x4 rotateScaleTranslate() {
         float[][] matrix = {
                 {1, 0, 0, 0},
@@ -189,6 +193,7 @@ public class Matrix4x4{
                 {0, 0, 0, 1}};
         return new Matrix4x4(matrix);
     }
+
     public static Matrix4x4 rotate(float angle, float axisX, float axisY, float axisZ) {
         float radians = (float) Math.toRadians(angle);
         float sin = (float) Math.sin(radians);
@@ -231,13 +236,14 @@ public class Matrix4x4{
         return new Matrix4x4(matrix);
     }
 
-    public static Vector3D multiplyMatrix4ByVector3DWithW(final Matrix4x4 matrix, final Vector3D vertex) {
+    public static Vector4D multiplyMatrix4ByVector3DWithW(final Matrix4x4 matrix, final Vector3D vertex) {
         final float x = ((vertex.get(0) * matrix.getElem(0,0)) + (vertex.get(1) * matrix.getElem(0, 1)) + (vertex.get(2) * matrix.getElem(0, 2)) + matrix.getElem(0, 3));
         final float y = ((vertex.get(0) * matrix.getElem(1,0)) + (vertex.get(1) * matrix.getElem(1, 1)) + (vertex.get(2) * matrix.getElem(1, 2)) + matrix.getElem(1, 3));
         final float z = ((vertex.get(0) * matrix.getElem(2,0)) + (vertex.get(1) * matrix.getElem(2, 1)) + (vertex.get(2) * matrix.getElem(2, 2)) + matrix.getElem(2, 3));
         final float w = ((vertex.get(0) * matrix.getElem(3,0)) + (vertex.get(1) * matrix.getElem(3, 1)) + (vertex.get(2) * matrix.getElem(3, 2)) + matrix.getElem(3, 3));
-        return new Vector3D(x / w, y / w, z / w);
+        return new Vector4D(x / w, y / w, z / w, w);
     }
+
     public static Vector3D multMatrix4x4OnVector3D(Matrix4x4 m, Vector3D v) {
         return new Vector3D(m.getElem(0, 0) * v.get(0) + m.getElem(0, 1) * v.get(1) + m.getElem(0, 2) * v.get(2) + m.getElem(0, 3),
                 m.getElem(1, 0) * v.get(0) + m.getElem(1, 1) * v.get(1) + m.getElem(1, 2) * v.get(2) + m.getElem(1, 3),
@@ -253,8 +259,8 @@ public class Matrix4x4{
 
         float tangentMinusOnDegree = (float) (1.0F / (Math.tan(fov * 0.5F)));
 
-        matrix[0][0] = tangentMinusOnDegree / aspectRatio;
-        matrix[1][1] = tangentMinusOnDegree;
+        matrix[0][0] = tangentMinusOnDegree;
+        matrix[1][1] = tangentMinusOnDegree / aspectRatio;
         matrix[2][2] = (farPlane + nearPlane) / (farPlane - nearPlane);
         matrix[2][3] = 1.0F;
         matrix[3][2] = 2 * (nearPlane * farPlane) / (nearPlane - farPlane);

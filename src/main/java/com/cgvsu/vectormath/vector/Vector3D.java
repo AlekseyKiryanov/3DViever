@@ -38,7 +38,7 @@ public class Vector3D {
         this.z = z;
     }
 
-    public void setAll(float valueX, float valueY, float valueZ){
+    public void setAll(float valueX, float valueY, float valueZ) {
         this.x = valueX;
         this.y = valueY;
         this.z = valueZ;
@@ -145,8 +145,13 @@ public class Vector3D {
         this.y = v2;
     }
 
-    public static Vector2D vertexToPoint(final Vector3D vertex, final int width, final int height) {
+ /*   public static Vector2D vertexToPoint(final Vector3D vertex, final int width, final int height) {
         return new Vector2D((float) vertex.get(0) * width + width / 2.0F, (float) -vertex.get(1) * height + height / 2.0F);
+    }*/
+
+    public static Vector2D vertexToPoint(final Vector4D vertex, final int width, final int height) {
+        return new Vector2D((vertex.get(0) + 1) * ((width - 1) / 2.0F),
+                (vertex.get(1) - 1) * ((1 - height) / 2.0F));
     }
 
     @Override

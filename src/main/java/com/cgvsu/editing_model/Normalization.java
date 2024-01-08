@@ -23,12 +23,12 @@ public class Normalization {
         ansModel.polygons = new ArrayList<>(workingModel.polygons);
         ansModel.normals = new ArrayList<>();
 
-        ArrayListMultimap<Integer, Integer> vertexes_at_polygons = ArrayListMultimap.create();
+        ArrayListMultimap<Integer, Integer> vertecesAtPolygons = ArrayListMultimap.create();
 
         int p = workingModel.polygons.size();
         for (int i = 0; i < p; i++) {
             int l = workingModel.polygons.get(i).getVertexIndices().size();
-            ArrayList<Integer> new_normals = new ArrayList<>();
+            ArrayList<Integer> newNormals = new ArrayList<>();
             Vector3D sumNormals = new Vector3D(0, 0, 0);
 
             for (int j = 0; j < l; j++) {
@@ -38,18 +38,18 @@ public class Normalization {
 
                 Vector3D normal = vec1.subtract(point).crossProduct(vec2.subtract(point)).normalize();
 
-                new_normals.add(ansModel.normals.size());
+                newNormals.add(ansModel.normals.size());
                 ansModel.normals.add(normal);
 
 
                 sumNormals = sumNormals.add(normal);
 
-                vertexes_at_polygons.put(workingModel.polygons.get(i).getVertexIndices().get(j), i);
+                vertecesAtPolygons.put(workingModel.polygons.get(i).getVertexIndices().get(j), i);
 
             }
 
 
-            ansModel.polygons.get(i).setNormalIndices(new_normals);
+            ansModel.polygons.get(i).setNormalIndices(newNormals);
             sumNormals = sumNormals.divide(l);
             ansModel.polygons.get(i).setNormal(sumNormals);
 
@@ -63,15 +63,15 @@ public class Normalization {
             int l = ansModel.polygons.get(i).getVertexIndices().size();
             for (int j = 0; j < l; j++) {
 
-                ArrayList<Integer> other_polygons = new ArrayList<>(vertexes_at_polygons.get(ansModel.polygons.get(i).getVertexIndices().get(j)));
-                int m = other_polygons.size();
+                ArrayList<Integer> otherPolygons = new ArrayList<>(vertecesAtPolygons.get(ansModel.polygons.get(i).getVertexIndices().get(j)));
+                int m = otherPolygons.size();
                 Vector3D sumNormals = new Vector3D(0, 0, 0);
                 int k = 0;
                 for (int n = 0; n < m; n++) {
 
-                    if (ansModel.polygons.get(i).getNormal().dotProduct(ansModel.polygons.get(other_polygons.get(n)).getNormal()) > LEVEL_OF_EDGE_SMOOTHING) {
+                    if (ansModel.polygons.get(i).getNormal().dotProduct(ansModel.polygons.get(otherPolygons.get(n)).getNormal()) > LEVEL_OF_EDGE_SMOOTHING) {
                         //Усредняются только те нормали, между которыми угол достаточно острый.
-                        sumNormals = sumNormals.add(ansModel.polygons.get(other_polygons.get(n)).getNormal());
+                        sumNormals = sumNormals.add(ansModel.polygons.get(otherPolygons.get(n)).getNormal());
                         k++;
                     }
                 }

@@ -20,6 +20,13 @@
             <artifactId>javafx-controls</artifactId>
             <version>17.0.0.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.levigo/gwt-awt -->
+        <dependency>
+            <groupId>com.levigo</groupId>
+            <artifactId>gwt-awt</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>

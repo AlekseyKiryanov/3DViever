@@ -12,7 +12,7 @@ import java.util.List;
 public class Triangulation {
     private final Model working_model;
 
-    private final double EPS = 0e-5;
+    private final double EPS = 1e-5;
     private Model ansModel;
 
     public Triangulation(Model working_model) {
@@ -25,8 +25,8 @@ public class Triangulation {
         ansModel.normals = new ArrayList<>(working_model.normals);
         ansModel.textureVertices = new ArrayList<>(working_model.textureVertices);
 
-        int p = working_model.polygons.size();
-        for (int i = 0; i < p; i++) {
+        int polygonsCount = working_model.polygons.size();
+        for (int i = 0; i < polygonsCount; i++) {
             if (working_model.polygons.get(i).getVertexIndices().size() == 3) {
                 ansModel.polygons.add(working_model.polygons.get(i));
             } else {
@@ -41,10 +41,10 @@ public class Triangulation {
     private void triangulatePolygon(Polygon p) {
         int first_param = -1;
         int second_param = -1;
-        int l = p.getVertexIndices().size();
+        int verticesCount = p.getVertexIndices().size();
 
         double delta = 0;
-        for (int i = 1; i < l; i++) {
+        for (int i = 1; i < verticesCount; i++) {
             delta += Math.abs(working_model.vertices.get(p.getVertexIndices().get(i)).get(0) - working_model.vertices.get(p.getVertexIndices().get(i - 1)).get(0));
         }
         if (delta > EPS) {
@@ -52,7 +52,7 @@ public class Triangulation {
         }
 
         delta = 0;
-        for (int i = 1; i < l; i++) {
+        for (int i = 1; i < verticesCount; i++) {
             delta += Math.abs(working_model.vertices.get(p.getVertexIndices().get(i)).get(1) - working_model.vertices.get(p.getVertexIndices().get(i - 1)).get(1));
         }
         if (delta > EPS) {
@@ -64,7 +64,7 @@ public class Triangulation {
         }
 
         delta = 0;
-        for (int i = 1; i < l; i++) {
+        for (int i = 1; i < verticesCount; i++) {
             delta += Math.abs(working_model.vertices.get(p.getVertexIndices().get(i)).get(2) - working_model.vertices.get(p.getVertexIndices().get(i - 1)).get(2));
         }
         if (delta > EPS && second_param != 1) {
@@ -74,7 +74,7 @@ public class Triangulation {
 
         ArrayList<Vector2D> points = new ArrayList<>();
         ArrayList<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < l; i++) {
+        for (int i = 0; i < verticesCount; i++) {
             points.add(new Vector2D(working_model.vertices.get(p.getVertexIndices().get(i)).get(first_param), working_model.vertices.get(p.getVertexIndices().get(i)).get(second_param)));
             indexes.add(i);
 
@@ -102,39 +102,39 @@ public class Triangulation {
 
 
             if (!clockwise && cross >= 0 && validTriangle(triangle, p1, p2, p3, points)) {
-                Polygon rez = new Polygon();
-                rez.setNormalIndices(new ArrayList<>(Arrays.asList(p.getNormalIndices().get(indexes.get((index) % points.size())), p.getNormalIndices().get(indexes.get((index + 1) % points.size())), p.getNormalIndices().get(indexes.get((index + 2) % points.size())))));
-                rez.setVertexIndices(new ArrayList<>(Arrays.asList(p.getVertexIndices().get(indexes.get((index) % points.size())), p.getVertexIndices().get(indexes.get((index + 1) % points.size())), p.getVertexIndices().get(indexes.get((index + 2) % points.size())))));
+                Polygon result = new Polygon();
+                result.setNormalIndices(new ArrayList<>(Arrays.asList(p.getNormalIndices().get(indexes.get((index) % points.size())), p.getNormalIndices().get(indexes.get((index + 1) % points.size())), p.getNormalIndices().get(indexes.get((index + 2) % points.size())))));
+                result.setVertexIndices(new ArrayList<>(Arrays.asList(p.getVertexIndices().get(indexes.get((index) % points.size())), p.getVertexIndices().get(indexes.get((index + 1) % points.size())), p.getVertexIndices().get(indexes.get((index + 2) % points.size())))));
                 if (!p.getTextureVertexIndices().isEmpty()) {
-                    rez.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
+                    result.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
                 }
 
 
                 indexes.remove((index + 1) % points.size());
                 points.remove(p2);
 
-                ansModel.polygons.add(rez);
+                ansModel.polygons.add(result);
 
 
             } else if (clockwise && cross <= 0 && validTriangle(triangle, p1, p2, p3, points)) {
-                Polygon rez = new Polygon();
-                rez.setNormalIndices(new ArrayList<>(Arrays.asList(p.getNormalIndices().get(indexes.get((index) % points.size())), p.getNormalIndices().get(indexes.get((index + 1) % points.size())), p.getNormalIndices().get(indexes.get((index + 2) % points.size())))));
-                rez.setVertexIndices(new ArrayList<>(Arrays.asList(p.getVertexIndices().get(indexes.get((index) % points.size())), p.getVertexIndices().get(indexes.get((index + 1) % points.size())), p.getVertexIndices().get(indexes.get((index + 2) % points.size())))));
+                Polygon result = new Polygon();
+                result.setNormalIndices(new ArrayList<>(Arrays.asList(p.getNormalIndices().get(indexes.get((index) % points.size())), p.getNormalIndices().get(indexes.get((index + 1) % points.size())), p.getNormalIndices().get(indexes.get((index + 2) % points.size())))));
+                result.setVertexIndices(new ArrayList<>(Arrays.asList(p.getVertexIndices().get(indexes.get((index) % points.size())), p.getVertexIndices().get(indexes.get((index + 1) % points.size())), p.getVertexIndices().get(indexes.get((index + 2) % points.size())))));
                 if (!p.getTextureVertexIndices().isEmpty()) {
-                    rez.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
+                    result.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
                 }
 
 
                 indexes.remove((index + 1) % points.size());
                 points.remove(p2);
 
-                ansModel.polygons.add(rez);
+                ansModel.polygons.add(result);
 
             } else {
                 index++;
             }
 
-            if (index > l * l * l * l) {
+            if (index > verticesCount * verticesCount * verticesCount * verticesCount) {
                 break;
                 //throw new BadPoligonException("неверный порядок обхода (перекрест ребер)", p.getLine());
             }
@@ -146,14 +146,14 @@ public class Triangulation {
 
             index = 2;
 
-            Polygon rez = new Polygon();
-            rez.setNormalIndices(new ArrayList<>(Arrays.asList(p.getNormalIndices().get(indexes.get((index) % points.size())), p.getNormalIndices().get(indexes.get((index + 1) % points.size())), p.getNormalIndices().get(indexes.get((index + 2) % points.size())))));
-            rez.setVertexIndices(new ArrayList<>(Arrays.asList(p.getVertexIndices().get(indexes.get((index) % points.size())), p.getVertexIndices().get(indexes.get((index + 1) % points.size())), p.getVertexIndices().get(indexes.get((index + 2) % points.size())))));
+            Polygon result = new Polygon();
+            result.setNormalIndices(new ArrayList<>(Arrays.asList(p.getNormalIndices().get(indexes.get((index) % points.size())), p.getNormalIndices().get(indexes.get((index + 1) % points.size())), p.getNormalIndices().get(indexes.get((index + 2) % points.size())))));
+            result.setVertexIndices(new ArrayList<>(Arrays.asList(p.getVertexIndices().get(indexes.get((index) % points.size())), p.getVertexIndices().get(indexes.get((index + 1) % points.size())), p.getVertexIndices().get(indexes.get((index + 2) % points.size())))));
             if (!p.getTextureVertexIndices().isEmpty()) {
-                rez.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
+                result.setTextureVertexIndices(new ArrayList<>(Arrays.asList(p.getTextureVertexIndices().get(indexes.get((index) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 1) % points.size())), p.getTextureVertexIndices().get(indexes.get((index + 2) % points.size())))));
             }
 
-            ansModel.polygons.add(rez);
+            ansModel.polygons.add(result);
         }
 
         points.clear();
@@ -173,7 +173,7 @@ public class Triangulation {
     private boolean validTriangle(Triangle triangle, Vector2D p1, Vector2D p2, Vector2D p3, List<Vector2D> points) {
         if (points.size() == 3) return true;
         for (Vector2D p : points) {
-            if (!p.equals(p1) && !p.equals(p2) && !p.equals(p3) && triangle.contains(p)) {
+            if (!p.equals(p1) && !p.equals(p2) && !p.equals(p3) && triangle.isContainsPoint(p)) {
                 return false;
             }
         }
@@ -191,9 +191,9 @@ public class Triangulation {
             C = c;
         }
 
-        boolean contains(Vector2D P) {
+        boolean isContainsPoint(Vector2D point) {
 
-            return Math.abs(this.area() - new Triangle(P, this.A, this.B).area() - new Triangle(P, this.A, this.C).area() - new Triangle(P, this.C, this.B).area()) <= EPS;
+            return Math.abs(this.area() - new Triangle(point, this.A, this.B).area() - new Triangle(point, this.A, this.C).area() - new Triangle(point, this.C, this.B).area()) <= EPS;
         }
 
         double area() {

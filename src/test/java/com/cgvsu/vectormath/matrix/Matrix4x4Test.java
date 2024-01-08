@@ -120,7 +120,7 @@ public class Matrix4x4Test {
         float[] vectorData = {1, 2, 3};
         Vector3D vector = new Vector3D(vectorData[0], vectorData[1],vectorData[2]);
 
-        Vector3D result = multiplyMatrix4ByVector3DWithW(matrix, vector);
+        Vector4D result = multiplyMatrix4ByVector3DWithW(matrix, vector);
         final float w = ((vector.get(0) * matrix.getElem(3,0)) + (vector.get(1) * matrix.getElem(3, 1)) + (vector.get(2) * matrix.getElem(3, 2)) + matrix.getElem(3, 3));
 
         assertEquals(18/w, result.get(0), 0.01);
@@ -140,7 +140,7 @@ public class Matrix4x4Test {
 
         float[][] matrixData2 = {
                 {16, 15, 14, 13},
-                {12, 11, 10, 9},
+                {12, 77, 10, 9},
                 {8, 7, 6, 5},
                 {4, 3, 2, 1}
         };
@@ -149,10 +149,10 @@ public class Matrix4x4Test {
         Matrix4x4 result = matrix1.multiply(matrix2);
 
         float[][] expectedData = {
-                {80, 70, 60, 50},
-                {240, 214, 188, 162},
-                {400, 358, 316, 274},
-                {560, 502, 444, 386}
+                {80, 202, 60, 50},
+                {240, 610, 188, 162},
+                {400, 1018, 316, 274},
+                {560, 1426, 444, 386}
         };
         assertArrayEquals(expectedData, result.getMatrix());
     }
