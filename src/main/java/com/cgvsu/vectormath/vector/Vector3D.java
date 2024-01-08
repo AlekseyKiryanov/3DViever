@@ -76,7 +76,6 @@ public class Vector3D {
     // Нормализация вектора
     public Vector3D normalize() {
         float len = length();
-        float var1 = (float) (1.0 / Math.sqrt((this.x * this.x + this.y * this.y + this.z * this.z)));
         if (Math.abs(len) < eps) {
             return new Vector3D(0, 0, 0);
 

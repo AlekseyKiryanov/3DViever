@@ -2,7 +2,6 @@ package com.cgvsu.render_engine.rasterization;
 
 import com.cgvsu.vectormath.vector.Vector2D;
 import com.cgvsu.vectormath.vector.Vector3D;
-import javafx.scene.paint.Color;
 
 public record TriangleSelfColored(int number,
                                   Vector2D a, Vector2D b, Vector2D c,

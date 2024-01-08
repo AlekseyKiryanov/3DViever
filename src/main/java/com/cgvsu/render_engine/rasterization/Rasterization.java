@@ -501,7 +501,7 @@ public class Rasterization {
         chosenPolygons = new ArrayList<>();
     }
 
-    public void paintPoints(TriangleVerteces triangle) {
+    public void paintPoints(TriangleVertices triangle) {
 
         paintDot(triangle.point1(), triangle.z1(), triangle.number1(), 0xFFFFA500);
         paintDot(triangle.point2(), triangle.z2(), triangle.number2(), 0xFFFFA500);

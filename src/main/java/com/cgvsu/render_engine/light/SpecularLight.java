@@ -1,7 +1,6 @@
 package com.cgvsu.render_engine.light;
 
 import com.cgvsu.vectormath.vector.Vector3D;
-import javafx.scene.paint.Color;
 
 public class SpecularLight extends Light {
 
@@ -34,7 +33,6 @@ public class SpecularLight extends Light {
         int b_s = (specColor) & 0xFF;
         int g_s = (specColor >> 8) & 0xFF;
         int r_s = (specColor >> 16) & 0xFF;
-        int a_s = specColor & 0xFF000000;
 
         int b = Integer.min(255, (int) (b_d * d + b_s * s));
         int g = Integer.min(255, (int) (g_d * d + g_s * s));

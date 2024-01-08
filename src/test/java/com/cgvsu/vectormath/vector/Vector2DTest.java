@@ -1,7 +1,6 @@
 package com.cgvsu.vectormath.vector;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.cgvsu.vectormath.vector.Vector2D;
 import org.testng.annotations.Test;
 
 public class Vector2DTest {

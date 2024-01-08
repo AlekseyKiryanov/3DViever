@@ -14,7 +14,6 @@ import static com.cgvsu.vectormath.vector.Vector3D.vertexToPoint;
 
 public class RenderSelfColored implements Render {
     private final static SimpleConsoleLogger log = SimpleConsoleLogger.getInstance();
-    private final Rasterization painter = Rasterization.getInstance();
 
     @Override
     public void render(Matrix4x4 modelViewProjectionMatrix, Model mesh, int width, int height, Rasterization painter) {

@@ -1,7 +1,6 @@
 package com.cgvsu.render_engine.light;
 
 import com.cgvsu.vectormath.vector.Vector3D;
-import javafx.scene.paint.Color;
 
 public class PolygonLight extends Light {
     @Override
