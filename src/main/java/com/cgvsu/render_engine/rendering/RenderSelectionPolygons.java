@@ -28,7 +28,7 @@ public class RenderSelectionPolygons implements Render {
         for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
 
             Vector3D vertex1 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(0));
-            Vector4D vertex1M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex1);
+            Vector4D vertex1M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix, vertex1);
 
             Vector2D resultPoint1 = vertexToPoint(vertex1M, width, height);
             float z1 = vertex1M.get(2);
@@ -36,7 +36,7 @@ public class RenderSelectionPolygons implements Render {
 
 
             Vector3D vertex2 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(1));
-            Vector4D vertex2M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex2);
+            Vector4D vertex2M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix, vertex2);
 
             Vector2D resultPoint2 = vertexToPoint(vertex2M, width, height);
             float z2 = vertex2M.get(2);
@@ -44,7 +44,7 @@ public class RenderSelectionPolygons implements Render {
 
 
             Vector3D vertex3 = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(2));
-            Vector4D vertex3M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix.transpose(), vertex3);
+            Vector4D vertex3M = multiplyMatrix4ByVector3DWithW(modelViewProjectionMatrix, vertex3);
 
             Vector2D resultPoint3 = vertexToPoint(vertex3M, width, height);
             float z3 = vertex3M.get(2);

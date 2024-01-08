@@ -41,6 +41,6 @@ public class RenderEngine {
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiply(viewMatrix);
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiply(projectionMatrix);
 
-        render.render(modelViewProjectionMatrix, mesh, width, height, painter);
+        render.render(modelViewProjectionMatrix.transpose(), mesh, width, height, painter);
     }
 }

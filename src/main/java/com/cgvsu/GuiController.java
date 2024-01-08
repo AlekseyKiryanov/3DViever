@@ -42,7 +42,7 @@ import javafx.animation.AnimationTimer;
 
 public class GuiController {
 
-    final private int RELOAD_MILLISECONDS = 50; //Время перерисовки кадра.
+    final private int RELOAD_MILLISECONDS = 100; //Время перерисовки кадра.
 
 
     final private float TRANSLATION = 0.5F;
