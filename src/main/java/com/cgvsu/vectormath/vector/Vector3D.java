@@ -52,7 +52,6 @@ public class Vector3D {
     // Вычитание векторов
     public Vector3D subtract(Vector3D other) {
         return new Vector3D(this.x - other.x, this.y - other.y, this.z - other.z);
-
     }
 
     // Умножение на скаляр
@@ -83,8 +82,6 @@ public class Vector3D {
 
         }
         return new Vector3D(x / len, y / len, z / len);
-//        return new Vector3D(x * var1, y * var1, z * var1);
-
     }
 
     // Скалярное произведение векторов
@@ -144,10 +141,6 @@ public class Vector3D {
         this.x = v1;
         this.y = v2;
     }
-
- /*   public static Vector2D vertexToPoint(final Vector3D vertex, final int width, final int height) {
-        return new Vector2D((float) vertex.get(0) * width + width / 2.0F, (float) -vertex.get(1) * height + height / 2.0F);
-    }*/
 
     public static Vector2D vertexToPoint(final Vector4D vertex, final int width, final int height) {
         return new Vector2D((vertex.get(0) + 1) * ((width - 1) / 2.0F),

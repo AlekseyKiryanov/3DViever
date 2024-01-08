@@ -21,8 +21,14 @@ public class AffineTransform {
             0, 1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1);
-    private Matrix4x4 ScaleMatrix;
-    private Matrix4x4 TranslationMatrix;
+    private Matrix4x4 ScaleMatrix = new Matrix4x4(1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1);
+    private Matrix4x4 TranslationMatrix = new Matrix4x4(1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1);
     private Matrix4x4 AffineTransformMatrix = new Matrix4x4(1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
@@ -85,7 +91,7 @@ public class AffineTransform {
                 0, 0, 0, 1);
 
         //Матрица аффинных преобразований принимается равной единице
-        AffineTransformMatrix = new Matrix4x4(TranslationMatrix);
+        AffineTransformMatrix = new Matrix4x4(TranslationMatrix.transpose());
 
         //Перемножение матриц поворота согласно их порядку
         switch (rotationOrder) {
