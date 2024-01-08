@@ -42,16 +42,10 @@ import javafx.animation.AnimationTimer;
 
 public class GuiController {
 
-    final private int RELOAD_MILLISECONDS = 50; //Время перерисовки кадра.
-
-
-    final private float TRANSLATION = 0.5F;
-
-
+    final private int RELOAD_MILLISECONDS = 50;
+    private long lastTime = 0;
     @FXML
     AnchorPane anchorPane;
-    //@FXML
-    //private Canvas imageCanvas;
     @FXML
     private ImageView imageCanvas;
     @FXML
@@ -86,40 +80,44 @@ public class GuiController {
     private Label modelStatistic;
     @FXML
     private Label worldStatistic;
-
-
     private final AffineTransform affineTransform = new AffineTransform();
-
     private boolean isAutoRotate = false;
     private Model activeModel = null;
-
     private final SimpleConsoleLogger log = SimpleConsoleLogger.getInstance();
     private final Rasterization rasterization = Rasterization.getInstance();
     private final Deletion deletion = Deletion.getInstance();
     private final LightFactory lightFactory = new LightFactory();
-
-
     private Camera activeCamera;
-
     private Camera lightCamera;
-
     private int numberCamera = 0;
-
-
     @FXML
     private ComboBox<Camera> camerasComboBox = new ComboBox<>();
     @FXML
     private ComboBox<Model> modelsComboBox = new ComboBox<>();
-
     @FXML
     private CheckMenuItem showTextureCheck;
-
     private HashMap<Model, Model> originalModels = new HashMap<>();
-
-
     private final RenderEngine renderEngine = new RenderEngine();
-
     private Timeline timeline;
+    @FXML
+    private ColorPicker modelColor;
+
+    @FXML
+    private ColorPicker backgroundColor;
+
+    @FXML
+    private ColorPicker specularColor;
+
+    @FXML
+    private ColorPicker reflectionColor;
+    @FXML
+    private RadioMenuItem noMeshRadioMenuItem;
+
+    @FXML
+    private RadioMenuItem selectionVerticesRadioMenuItem;
+
+    @FXML
+    private RadioMenuItem selectionPolygonsRadioMenuItem;
 
     private int colorToInt(Color c) {
         int alpha = 255;
@@ -141,7 +139,6 @@ public class GuiController {
     private void initialize() {
 
         makeNewCamera();
-
 
         newCamera.setOnAction(event -> makeNewCamera());
 
@@ -177,19 +174,17 @@ public class GuiController {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Проблемка");
                 alert.setHeaderText("Чтобы изменить сначала загрузите модель");
-
                 alert.showAndWait();
             }
 
         });
 
-
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> imageCanvas.setFitWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> imageCanvas.setFitHeight(newValue.doubleValue()));
 
         if (imageCanvas != null) {
-            imageCanvas.setOnMouseMoved(event2 -> activeCamera.handleMouseInput(event2.getX(), event2.getY(), false, false));
-            imageCanvas.setOnMouseDragged(event2 -> activeCamera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
+            imageCanvas.setOnMouseMoved(event -> activeCamera.handleMouseInput(event.getX(), event.getY(), false, false));
+            imageCanvas.setOnMouseDragged(event -> activeCamera.handleMouseInput(event.getX(), event.getY(), event.isPrimaryButtonDown(), event.isSecondaryButtonDown()));
             imageCanvas.setOnScroll(event2 -> {
                 activeCamera.mouseDeltaY = event2.getDeltaY();
                 activeCamera.handleMouseInput(event2.getX(), event2.getY(), false, false);
@@ -201,34 +196,31 @@ public class GuiController {
                 }
             });
 
-            // Установка обработчиков событий для кнопок
-            rotateButton.setOnAction(e -> {
+            rotateButton.setOnAction(event -> {
 
                 if (activeModel != null) {
-                    startRotationAnimation();
+                    isAutoRotate = !isAutoRotate;
+                    if (!isAutoRotate) {
+                        lastTime = 0;
+                    }
                 } else {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Проблемка");
                     alert.setHeaderText("Чтобы вращать сначала загрузите модель");
-
                     alert.showAndWait();
                 }
-
             });
 
-            affButton.setOnAction(e -> {
+            affButton.setOnAction(event -> {
 
                 if (activeModel != null) {
-
                     applyTransformations(parseTextField(SxField, false), parseTextField(SyField, false), parseTextField(SzField, false), parseTextField(RxField, true), parseTextField(RyField, true), parseTextField(RzField, true), parseTextField(TxField, true), parseTextField(TyField, true), parseTextField(TzField, true));
                 } else {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Проблемка");
                     alert.setHeaderText("Чтобы изменять сначала загрузите модель");
-
                     alert.showAndWait();
                 }
-
             });
         }
 
@@ -236,6 +228,7 @@ public class GuiController {
         timeline.setCycleCount(Animation.INDEFINITE);
 
         KeyFrame frame = new KeyFrame(Duration.millis(RELOAD_MILLISECONDS), event -> {
+
             double width = imageCanvas.getFitWidth();
             double height = imageCanvas.getFitHeight();
 
@@ -253,20 +246,33 @@ public class GuiController {
             lightFactory.setReflectionColor(colorToInt(reflectionColor.getValue()));
             int a = 0;
             int b = 0;
+
             for (Model model : modelsComboBox.getItems()) {
                 rasterization.setTexture(model.getTexture());
                 renderEngine.setRender(model.getRenderType());
-                renderEngine.render(activeCamera, model, (int) width, (int) height);
+                renderEngine.render(activeCamera, model, (int) width, (int) height, affineTransform);
                 a += model.vertices.size();
                 b += model.polygons.size();
             }
+
             imageCanvas.setImage(rasterization.paint());
-            //System.out.println(  imageCanvas.getImage().getPixelReader().getColor(0,0));
             log.setSameLevel(System.Logger.Level.OFF);
 
             worldStatistic.setText(String.format("Сцена: %d вершин, %d треугольников", a, b));
 
+            if (isAutoRotate) {
+                if (lastTime != 0) {
+                    final double elapsedSeconds = (System.nanoTime() - lastTime) / 1e9;
 
+                    final float rotateSpeed = 10;
+                    float rotateAngle = (float) (elapsedSeconds * rotateSpeed);
+
+                    applyTransformations(1, 1, 1, 0, rotateAngle, 0, 0, 0, 0);
+                }
+                lastTime = System.nanoTime();
+            } else {
+                lastTime = 0;
+            }
         });
 
         timeline.getKeyFrames().add(frame);
@@ -310,7 +316,6 @@ public class GuiController {
 
     private void applyTransformations(float scaleX, float scaleY, float scaleZ, float rotateX, float rotateY, float rotateZ, float translateX, float translateY, float translateZ) {
 
-        // Установка параметров трансформаций
         affineTransform.setScaleX(scaleX);
         affineTransform.setScaleY(scaleY);
         affineTransform.setScaleZ(scaleZ);
@@ -373,8 +378,6 @@ public class GuiController {
 
             alert.showAndWait();
         }
-
-
     }
 
     @FXML
@@ -446,14 +449,12 @@ public class GuiController {
         }
     }
 
-    private long lastTime = 0;
-
     private void startRotationAnimation() {
         if (!isAutoRotate) {
             isAutoRotate = true;
         } else {
             isAutoRotate = false;
-            lastTime = 0; // Сброс значения lastTime при остановке анимации
+            lastTime = 0;
         }
         AnimationTimer rotationTimer = new AnimationTimer() {
             @Override
@@ -471,7 +472,6 @@ public class GuiController {
                     lastTime = now;
                 } else {
                     lastTime = 0;
-                    //applyTransformations(1, 1, 1, 0, 0, 0, 0, 0, 0);
                 }
             }
         };
@@ -493,10 +493,8 @@ public class GuiController {
             return;
         }
 
-
         loadModel(Path.of(file.getAbsolutePath()), file.getAbsolutePath());
     }
-
 
     @FXML
     private void onOpenTextureMenuItemClick() {
@@ -561,7 +559,6 @@ public class GuiController {
             alertBadCollection();
         }
     }
-
 
     @FXML
     private void loadSphere() {
@@ -656,19 +653,6 @@ public class GuiController {
         }
     }
 
-
-    @FXML
-    private ColorPicker modelColor;
-
-    @FXML
-    private ColorPicker backgroundColor;
-
-    @FXML
-    private ColorPicker specularColor;
-
-    @FXML
-    private ColorPicker reflectionColor;
-
     @FXML
     private void setPrimeLight() {
         rasterization.setLight(lightFactory.createLight(LightType.PRIMARY));
@@ -693,16 +677,6 @@ public class GuiController {
     private void setNoneLight() {
         rasterization.setLight(lightFactory.createLight(LightType.NONE));
     }
-
-    @FXML
-    private RadioMenuItem noMeshRadioMenuItem;
-
-    @FXML
-    private RadioMenuItem selectionVerticesRadioMenuItem;
-
-    @FXML
-    private RadioMenuItem selectionPolygonsRadioMenuItem;
-
 
     @FXML
     private void setNoMeshRender() {
@@ -735,8 +709,6 @@ public class GuiController {
 
     @FXML
     public void deleteVertices() {
-
-
         if (activeModel != null) {
             deletion.deleteVerteces(activeModel, rasterization.getChosenVertexes());
             rasterization.resetChooseVertices();
@@ -762,8 +734,6 @@ public class GuiController {
 
             alert.showAndWait();
         }
-
-
     }
 
     @FXML
@@ -783,8 +753,6 @@ public class GuiController {
 
             alert.showAndWait();
         }
-
-
     }
 
     private void selectModel() {
@@ -815,9 +783,7 @@ public class GuiController {
                 selectionPolygonsRadioMenuItem.setSelected(false);
             }
             default -> {
-
             }
         }
-
     }
 }

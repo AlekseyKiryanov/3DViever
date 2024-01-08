@@ -7,7 +7,7 @@ public class Vector4D{
     private float y;
     private float z;
     private float w;
-    private static float eps = 1e-4f;
+    private static final float eps = 1e-4f;
 
     public Vector4D(float x, float y, float z, float w) {
         this.x = x;
