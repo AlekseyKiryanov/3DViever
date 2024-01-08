@@ -520,8 +520,6 @@ public class GuiController {
         alert.setHeaderText("Чтобы выбрать текстуру сначала загрузите модель");
         alert.showAndWait();
     }
-
-
     
     @FXML
     private void loadCube() {
