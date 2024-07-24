@@ -10,3 +10,4 @@
 - Управление освещением
 - Накладывание текстуры
 - Загрузка нескольких моделей
+![Окно программы](https://github.com/AlekseyKiryanov/3DViever/blob/main/screen.png)
